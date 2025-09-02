@@ -1,2 +1,6 @@
 Flask
+Flask-Session
+pandas
+scikit-learn
+streamlit
 gunicorn
