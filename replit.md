@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is an AI-powered web application designed for the PM Internship Scheme that matches students with government internship opportunities. The system uses intelligent algorithms to pair students with suitable internships based on skills, educational background, location preferences, and affirmative action compliance. Built for Smart India Hackathon 2025, it serves as a comprehensive platform for both students seeking internships and administrators managing the matching process.
+This is an AI-powered web application designed for the PM Internship Scheme that matches students with government internship opportunities. The system uses intelligent algorithms to pair students with suitable internships based on skills, educational background, location preferences, and affirmative action compliance. It serves as a comprehensive platform for both students seeking internships and administrators managing the matching process.
 
 ## User Preferences
 
@@ -13,7 +13,7 @@ Preferred communication style: Simple, everyday language.
 ### Frontend Architecture
 - **Template Engine**: Jinja2 templates with Flask for server-side rendering
 - **UI Framework**: Bootstrap 5.3.2 for responsive design and components
-- **Styling**: Custom CSS with dark theme color palette (charcoal backgrounds, coral accents)
+- **Styling**: Custom CSS with professional color palette (light grey backgrounds, white cards, dark charcoal text, blue accents)
 - **JavaScript**: Vanilla JavaScript for interactive components like multi-select inputs and dynamic matching interface
 - **Icons**: Font Awesome 6.4.0 for consistent iconography
 

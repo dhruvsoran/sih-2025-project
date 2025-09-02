@@ -1,24 +1,33 @@
-/* Smart India Hackathon 2025 - PM Internship Matching System */
-/* Color Palette:
-   Background: hsl(20, 14%, 4%) - Dark charcoal
-   Primary: hsl(9, 75%, 61%) - Warm coral
-   Secondary: hsl(30, 15%, 52%) - Muted brown
-   Text: hsl(45, 25%, 91%) - Light cream
-   Cards: hsl(20, 14%, 8%) - Dark brown
+/* PM Internship Matching System */
+/* Professional Color Palette:
+   Background: #f8f9fa (Light grey)
+   Cards: #ffffff (Pure white)
+   Dark areas: #212529 (Dark charcoal)
+   Primary: #495057 (Medium grey)
+   Secondary: #6c757d (Light grey)
+   Text: #212529 (Dark charcoal)
+   Text muted: #6c757d (Grey)
+   Borders: #dee2e6 (Light grey border)
+   Accent: #007bff (Professional blue)
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --bg-primary: hsl(20, 14%, 4%);
-    --bg-card: hsl(20, 14%, 8%);
-    --color-primary: hsl(9, 75%, 61%);
-    --color-secondary: hsl(30, 15%, 52%);
-    --color-text: hsl(45, 25%, 91%);
-    --color-text-muted: hsl(45, 15%, 70%);
-    --border-color: hsl(20, 14%, 15%);
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --bg-primary: #f8f9fa;
+    --bg-card: #ffffff;
+    --bg-dark: #212529;
+    --color-primary: #495057;
+    --color-secondary: #6c757d;
+    --color-accent: #007bff;
+    --color-text: #212529;
+    --color-text-muted: #6c757d;
+    --color-text-light: #ffffff;
+    --border-color: #dee2e6;
+    --border-color-dark: #495057;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --gradient-primary: linear-gradient(135deg, #495057, #6c757d);
 }
 
 * {
@@ -50,6 +59,7 @@ h4 { font-size: 1.25rem; }
 .text-primary { color: var(--color-primary) !important; }
 .text-secondary { color: var(--color-secondary) !important; }
 .text-muted { color: var(--color-text-muted) !important; }
+.text-accent { color: var(--color-accent) !important; }
 
 /* Layout Components */
 .container {
@@ -59,32 +69,32 @@ h4 { font-size: 1.25rem; }
 }
 
 .navbar {
-    background-color: var(--bg-card) !important;
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-dark) !important;
+    border-bottom: 1px solid var(--border-color-dark);
     box-shadow: var(--shadow);
 }
 
 .navbar-brand {
-    color: var(--color-primary) !important;
+    color: var(--color-text-light) !important;
     font-weight: 700;
     font-size: 1.5rem;
 }
 
 .navbar-nav .nav-link {
-    color: var(--color-text) !important;
+    color: var(--color-text-light) !important;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-    color: var(--color-primary) !important;
+    color: var(--color-accent) !important;
 }
 
 /* Cards and Content Areas */
 .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: var(--shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -95,9 +105,10 @@ h4 { font-size: 1.25rem; }
 }
 
 .card-header {
-    background-color: var(--bg-card);
+    background-color: var(--bg-primary);
     border-bottom: 1px solid var(--border-color);
     font-weight: 600;
+    color: var(--color-text);
 }
 
 .card-body {
@@ -107,7 +118,7 @@ h4 { font-size: 1.25rem; }
 /* Buttons */
 .btn {
     font-weight: 500;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 0.75rem 1.5rem;
     transition: all 0.3s ease;
     text-decoration: none;
@@ -118,26 +129,26 @@ h4 { font-size: 1.25rem; }
 
 .btn-primary {
     background-color: var(--color-primary);
-    color: white;
+    color: var(--color-text-light);
     border: 2px solid var(--color-primary);
 }
 
 .btn-primary:hover {
-    background-color: transparent;
-    color: var(--color-primary);
-    border-color: var(--color-primary);
+    background-color: var(--bg-dark);
+    color: var(--color-text-light);
+    border-color: var(--bg-dark);
 }
 
 .btn-secondary {
     background-color: var(--color-secondary);
-    color: white;
+    color: var(--color-text-light);
     border: 2px solid var(--color-secondary);
 }
 
 .btn-secondary:hover {
-    background-color: transparent;
-    color: var(--color-secondary);
-    border-color: var(--color-secondary);
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    border-color: var(--color-primary);
 }
 
 .btn-outline-primary {
@@ -148,7 +159,19 @@ h4 { font-size: 1.25rem; }
 
 .btn-outline-primary:hover {
     background-color: var(--color-primary);
-    color: white;
+    color: var(--color-text-light);
+}
+
+.btn-accent {
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
+    border: 2px solid var(--color-accent);
+}
+
+.btn-accent:hover {
+    background-color: transparent;
+    color: var(--color-accent);
+    border-color: var(--color-accent);
 }
 
 /* Forms */
@@ -156,16 +179,16 @@ h4 { font-size: 1.25rem; }
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     color: var(--color-text);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 0.75rem 1rem;
     transition: border-color 0.3s ease;
 }
 
 .form-control:focus, .form-select:focus {
     background-color: var(--bg-card);
-    border-color: var(--color-primary);
+    border-color: var(--color-accent);
     color: var(--color-text);
-    box-shadow: 0 0 0 0.2rem rgba(234, 88, 70, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .form-control::placeholder {
@@ -184,8 +207,8 @@ h4 { font-size: 1.25rem; }
 }
 
 .form-check-input:checked {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
 }
 
 .form-check-label {
@@ -194,16 +217,18 @@ h4 { font-size: 1.25rem; }
 
 /* Dashboard Statistics */
 .stat-card {
-    background: linear-gradient(135deg, var(--bg-card), var(--border-color));
-    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     padding: 1.5rem;
     text-align: center;
-    border: 1px solid var(--border-color);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow);
 }
 
 .stat-card:hover {
     transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
 }
 
 .stat-number {
@@ -223,11 +248,11 @@ h4 { font-size: 1.25rem; }
 /* Tables */
 .table {
     color: var(--color-text);
-    background-color: transparent;
+    background-color: var(--bg-card);
 }
 
 .table th {
-    background-color: var(--bg-card);
+    background-color: var(--bg-primary);
     border-color: var(--border-color);
     color: var(--color-text);
     font-weight: 600;
@@ -239,40 +264,48 @@ h4 { font-size: 1.25rem; }
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 /* Badges and Tags */
 .badge {
     font-weight: 500;
     padding: 0.5rem 0.75rem;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 .badge.bg-primary {
     background-color: var(--color-primary) !important;
+    color: var(--color-text-light) !important;
 }
 
 .badge.bg-secondary {
     background-color: var(--color-secondary) !important;
+    color: var(--color-text-light) !important;
 }
 
 .badge.bg-success {
     background-color: #28a745 !important;
+    color: var(--color-text-light) !important;
 }
 
 .badge.bg-warning {
     background-color: #ffc107 !important;
-    color: #000;
+    color: var(--color-text) !important;
+}
+
+.badge.bg-info {
+    background-color: var(--color-accent) !important;
+    color: var(--color-text-light) !important;
 }
 
 /* Skills Tags */
 .skill-tag {
     display: inline-block;
     background-color: var(--color-primary);
-    color: white;
+    color: var(--color-text-light);
     padding: 0.25rem 0.75rem;
-    border-radius: 20px;
+    border-radius: 16px;
     font-size: 0.875rem;
     margin: 0.25rem;
     font-weight: 500;
@@ -286,15 +319,17 @@ h4 { font-size: 1.25rem; }
 .match-item {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 1rem;
     transition: all 0.3s ease;
+    box-shadow: var(--shadow);
 }
 
 .match-item:hover {
-    border-color: var(--color-primary);
+    border-color: var(--color-accent);
     transform: translateX(5px);
+    box-shadow: var(--shadow-lg);
 }
 
 .match-score {
@@ -305,7 +340,7 @@ h4 { font-size: 1.25rem; }
 
 .match-rank {
     background-color: var(--color-primary);
-    color: white;
+    color: var(--color-text-light);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -339,74 +374,98 @@ h4 { font-size: 1.25rem; }
 /* Progress Indicators */
 .progress {
     background-color: var(--border-color);
-    border-radius: 10px;
+    border-radius: 8px;
     height: 8px;
 }
 
 .progress-bar {
-    background-color: var(--color-primary);
-    border-radius: 10px;
+    background-color: var(--color-accent);
+    border-radius: 8px;
 }
 
 /* Alerts */
 .alert {
-    border-radius: 8px;
-    border: none;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
     padding: 1rem 1.5rem;
     margin-bottom: 1rem;
 }
 
 .alert-success {
     background-color: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-    border-left: 4px solid #28a745;
+    color: #155724;
+    border-color: #c3e6cb;
 }
 
 .alert-danger {
     background-color: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-    border-left: 4px solid #dc3545;
+    color: #721c24;
+    border-color: #f5c6cb;
 }
 
 .alert-warning {
     background-color: rgba(255, 193, 7, 0.1);
-    color: #ffc107;
-    border-left: 4px solid #ffc107;
+    color: #856404;
+    border-color: #ffeaa7;
 }
 
 .alert-info {
-    background-color: rgba(23, 162, 184, 0.1);
-    color: #17a2b8;
-    border-left: 4px solid #17a2b8;
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #004085;
+    border-color: #b3d4fc;
+}
+
+.alert-light {
+    background-color: var(--bg-primary);
+    color: var(--color-text);
+    border-color: var(--border-color);
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, var(--bg-primary), var(--bg-card));
+    background: var(--gradient-primary);
     padding: 4rem 0;
     text-align: center;
     margin-bottom: 3rem;
+    color: var(--color-text-light);
 }
 
 .hero h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-text-light);
 }
 
 .hero p {
     font-size: 1.25rem;
-    color: var(--color-text-muted);
+    color: rgba(255, 255, 255, 0.9);
     margin-bottom: 2rem;
+}
+
+/* Government Header */
+.gov-header {
+    background: var(--bg-dark);
+    padding: 0.5rem 0;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+}
+
+.scheme-badge {
+    background: var(--gradient-primary);
+    color: var(--color-text-light);
+    padding: 0.5rem 1rem;
+    border-radius: 16px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
 }
 
 /* Loading Spinner */
 .spinner {
     border: 3px solid var(--border-color);
-    border-top: 3px solid var(--color-primary);
+    border-top: 3px solid var(--color-accent);
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -417,6 +476,77 @@ h4 { font-size: 1.25rem; }
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Multi-select styles */
+.multi-select-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.selected-items {
+    min-height: 40px;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-card);
+}
+
+.selected-item {
+    display: inline-block;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    margin: 0.25rem;
+    font-weight: 500;
+}
+
+.selected-item .remove-btn {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+}
+
+.dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--color-text);
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-primary);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item.selected {
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
 }
 
 /* Responsive Design */
@@ -482,34 +612,60 @@ h4 { font-size: 1.25rem; }
 
 /* Selection */
 ::selection {
-    background: var(--color-primary);
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-text-light);
 }
 
 /* Focus styles for accessibility */
 .btn:focus,
 .form-control:focus,
 .form-select:focus {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
 
-/* Government Portal Branding */
-.gov-header {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    padding: 0.5rem 0;
-    text-align: center;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: white;
+/* Footer styling */
+footer {
+    background-color: var(--bg-card) !important;
+    border-top: 1px solid var(--border-color) !important;
+    color: var(--color-text);
 }
 
-.scheme-badge {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: 600;
-    display: inline-block;
-    margin-bottom: 1rem;
+/* Navigation active states */
+.navbar-nav .nav-link.active {
+    color: var(--color-accent) !important;
+}
+
+/* Button variants for different contexts */
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: var(--color-text-light);
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: var(--color-text);
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: var(--color-text-light);
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
 }

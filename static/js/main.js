@@ -1,5 +1,4 @@
-// Smart India Hackathon 2025 - PM Internship Matching System
-// Interactive JavaScript functionality
+// PM Internship Matching System - Interactive JavaScript functionality
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all interactive components
