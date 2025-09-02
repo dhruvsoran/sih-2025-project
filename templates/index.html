@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <div class="scheme-badge">
+                    <i class="fas fa-star me-2"></i>Smart India Hackathon 2025
+                </div>
+                <h1 class="display-4 fw-bold mb-4">
+                    AI-Powered PM Internship Matching
+                </h1>
+                <p class="lead mb-4">
+                    Revolutionizing the way students connect with government internship opportunities through 
+                    intelligent matching algorithms that consider skills, preferences, and affirmative action compliance.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('profile_form') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Register as Student
+                    </a>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-chart-line me-2"></i>View Admin Panel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center mb-5">
+                <h2 class="text-primary">Intelligent Matching Features</h2>
+                <p class="text-muted">Advanced AI algorithms ensure optimal student-internship pairing</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-brain fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">AI-Powered Matching</h5>
+                        <p class="card-text text-muted">
+                            Advanced machine learning algorithms analyze student profiles against internship requirements 
+                            to find the best matches based on skills, education, and preferences.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-balance-scale fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Affirmative Action</h5>
+                        <p class="card-text text-muted">
+                            Ensures compliance with affirmative action policies for rural/aspirational districts 
+                            and social categories (SC/ST/OBC) to promote inclusive growth.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-chart-pie fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Smart Analytics</h5>
+                        <p class="card-text text-muted">
+                            Comprehensive analytics dashboard for administrators to track matching efficiency, 
+                            capacity utilization, and demographic distribution.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-map-marker-alt fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Location Optimization</h5>
+                        <p class="card-text text-muted">
+                            Considers student location preferences and internship locations to optimize 
+                            placements and reduce geographical barriers.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-history fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">History Tracking</h5>
+                        <p class="card-text text-muted">
+                            Tracks past participation history to ensure fair distribution of opportunities 
+                            and give priority to first-time participants.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-building fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Capacity Management</h5>
+                        <p class="card-text text-muted">
+                            Intelligent capacity management ensures optimal utilization of available 
+                            internship positions across different sectors and organizations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="py-5" style="background-color: var(--bg-card);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center mb-5">
+                <h2 class="text-primary">System Impact</h2>
+                <p class="text-muted">Real-time statistics from our intelligent matching system</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="stat-number" data-tooltip="Total registered students">
+                        {{ stats.total_students if stats else '0' }}
+                    </div>
+                    <div class="stat-label">Registered Students</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="stat-number" data-tooltip="Available internship positions">
+                        {{ stats.total_internships if stats else '8' }}
+                    </div>
+                    <div class="stat-label">Internship Opportunities</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="stat-number" data-tooltip="Successful matches made">
+                        {{ stats.total_matches if stats else '0' }}
+                    </div>
+                    <div class="stat-label">Successful Matches</div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="stat-number" data-tooltip="Average matching accuracy">
+                        {{ "%.1f"|format(stats.match_rate if stats else 0) }}%
+                    </div>
+                    <div class="stat-label">Match Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center mb-5">
+                <h2 class="text-primary">How It Works</h2>
+                <p class="text-muted">Simple steps to find your perfect internship match</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="text-white fw-bold fs-3">1</span>
+                        </div>
+                    </div>
+                    <h5>Create Profile</h5>
+                    <p class="text-muted">
+                        Register and complete your profile with skills, education, preferences, and background information.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="text-white fw-bold fs-3">2</span>
+                        </div>
+                    </div>
+                    <h5>AI Analysis</h5>
+                    <p class="text-muted">
+                        Our AI algorithms analyze your profile against available internship opportunities using multiple criteria.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="text-white fw-bold fs-3">3</span>
+                        </div>
+                    </div>
+                    <h5>Smart Matching</h5>
+                    <p class="text-muted">
+                        Get ranked matches with detailed reasoning and compatibility scores for each opportunity.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="text-white fw-bold fs-3">4</span>
+                        </div>
+                    </div>
+                    <h5>Apply & Join</h5>
+                    <p class="text-muted">
+                        Review your matches and proceed with applications for your preferred internship opportunities.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center text-white">
+                <h2 class="mb-3">Ready to Find Your Perfect Internship?</h2>
+                <p class="lead mb-4">
+                    Join thousands of students who have found their ideal government internship opportunities 
+                    through our AI-powered matching system.
+                </p>
+                <a href="{{ url_for('profile_form') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-rocket me-2"></i>Start Your Journey
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

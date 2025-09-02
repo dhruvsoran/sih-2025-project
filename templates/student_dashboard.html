@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - PM Internship Matching{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    {% if student %}
+        <!-- Student Profile Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h2 class="text-primary mb-2">
+                                    <i class="fas fa-user-graduate me-2"></i>
+                                    Welcome back, {{ student.name }}!
+                                </h2>
+                                <p class="text-muted mb-1">
+                                    <i class="fas fa-envelope me-2"></i>{{ student.email }}
+                                </p>
+                                <p class="text-muted mb-1">
+                                    <i class="fas fa-graduation-cap me-2"></i>{{ student.education }} from {{ student.college }}
+                                </p>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-chart-line me-2"></i>CGPA: {{ student.cgpa }}/10.0
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <button type="button" class="btn btn-primary btn-lg" 
+                                        id="run-matching-btn" data-student-id="{{ student.id }}">
+                                    <i class="fas fa-magic me-2"></i>Find My Matches
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Details -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-cog me-2"></i>Profile Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>Age:</strong></div>
+                            <div class="col-sm-8">{{ student.age }} years</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>Category:</strong></div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-secondary">{{ student.category }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>Location Type:</strong></div>
+                            <div class="col-sm-8">
+                                <span class="badge {{ 'bg-warning' if student.location_type == 'rural' else 'bg-info' }}">
+                                    {{ student.location_type.title() }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>Experience:</strong></div>
+                            <div class="col-sm-8">{{ student.experience }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>Past Participation:</strong></div>
+                            <div class="col-sm-8">
+                                <span class="badge {{ 'bg-warning' if student.past_participation else 'bg-success' }}">
+                                    {{ 'Yes' if student.past_participation else 'No' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4"><strong>Location Preference:</strong></div>
+                            <div class="col-sm-8">{{ student.location_preference }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-cogs me-2"></i>Skills & Interests
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6 class="text-secondary mb-2">Technical Skills</h6>
+                            <div>
+                                {% for skill in student.skills %}
+                                    <span class="skill-tag">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h6 class="text-secondary mb-2">Areas of Interest</h6>
+                            <div>
+                                {% for interest in student.interests %}
+                                    <span class="skill-tag secondary">{{ interest }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Discover Matches</h5>
+                        <p class="card-text text-muted">
+                            Use our AI-powered matching system to find internships that perfectly align with your profile.
+                        </p>
+                        <a href="{{ url_for('run_matching', student_id=student.id) }}" class="btn btn-primary">
+                            <i class="fas fa-rocket me-2"></i>Run Matching
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-edit fa-3x text-secondary mb-3"></i>
+                        <h5 class="card-title">Update Profile</h5>
+                        <p class="card-text text-muted">
+                            Keep your profile up-to-date to get better matches and improve your visibility.
+                        </p>
+                        <a href="{{ url_for('profile_form') }}" class="btn btn-secondary">
+                            <i class="fas fa-user-edit me-2"></i>Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-chart-bar fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">View Analytics</h5>
+                        <p class="card-text text-muted">
+                            Explore system-wide statistics and see how your profile compares with other students.
+                        </p>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-success">
+                            <i class="fas fa-analytics me-2"></i>View Stats
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- No Profile State -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card text-center">
+                    <div class="card-body py-5">
+                        <i class="fas fa-user-plus fa-4x text-primary mb-4"></i>
+                        <h2 class="text-primary mb-3">Create Your Student Profile</h2>
+                        <p class="lead text-muted mb-4">
+                            Welcome to the PM Internship Matching System! To get started, you need to create 
+                            your student profile with your skills, education, and preferences.
+                        </p>
+                        <div class="row justify-content-center mb-4">
+                            <div class="col-md-8">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>What you'll need:</strong><br>
+                                    • Educational background and CGPA<br>
+                                    • Technical skills and interests<br>
+                                    • Location and category preferences<br>
+                                    • Previous internship experience
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('profile_form') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i>Create My Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add any student dashboard specific JavaScript here
+    console.log('Student Dashboard loaded');
+});
+</script>
+{% endblock %}

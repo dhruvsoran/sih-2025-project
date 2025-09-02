@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Matching Results - PM Internship Matching{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="text-primary mb-2">
+                                <i class="fas fa-magic me-2"></i>AI Matching Results
+                            </h2>
+                            <p class="text-muted mb-1">
+                                <strong>Student:</strong> {{ student.name }} ({{ student.email }})
+                            </p>
+                            <p class="text-muted mb-0">
+                                <strong>Profile:</strong> {{ student.education }} | CGPA: {{ student.cgpa }}/10 | 
+                                {{ student.category }} | {{ student.location_type.title() }}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                                </a>
+                                <button type="button" class="btn btn-primary" onclick="window.print()">
+                                    <i class="fas fa-print me-2"></i>Print Results
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Profile Summary -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-user me-2"></i>Your Profile Summary
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-4"><strong>Skills:</strong></div>
+                        <div class="col-8">
+                            {% for skill in student.skills[:5] %}
+                                <span class="badge bg-primary me-1">{{ skill }}</span>
+                            {% endfor %}
+                            {% if student.skills|length > 5 %}
+                                <span class="text-muted">+{{ student.skills|length - 5 }} more</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4"><strong>Interests:</strong></div>
+                        <div class="col-8">
+                            {% for interest in student.interests[:3] %}
+                                <span class="badge bg-secondary me-1">{{ interest }}</span>
+                            {% endfor %}
+                            {% if student.interests|length > 3 %}
+                                <span class="text-muted">+{{ student.interests|length - 3 }} more</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4"><strong>Location:</strong></div>
+                        <div class="col-8">{{ student.location_preference }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4"><strong>Experience:</strong></div>
+                        <div class="col-8">{{ student.experience }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Matching Overview
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-6 text-center">
+                            <div class="stat-number text-primary">{{ matches|length }}</div>
+                            <div class="stat-label">Total Matches</div>
+                        </div>
+                        <div class="col-6 text-center">
+                            <div class="stat-number text-success">
+                                {% if matches %}{{ matches[0].score }}%{% else %}0%{% endif %}
+                            </div>
+                            <div class="stat-label">Best Match Score</div>
+                        </div>
+                    </div>
+                    
+                    {% if matches %}
+                    <div class="mb-2">
+                        <small class="text-muted">Score Distribution:</small>
+                        <div class="mt-1">
+                            {% set excellent_matches = matches|selectattr('score', '>=', 80)|list|length %}
+                            {% set good_matches = matches|selectattr('score', '>=', 60)|selectattr('score', '<', 80)|list|length %}
+                            {% set fair_matches = matches|selectattr('score', '<', 60)|list|length %}
+                            
+                            <span class="badge bg-success me-1">Excellent: {{ excellent_matches }}</span>
+                            <span class="badge bg-warning me-1">Good: {{ good_matches }}</span>
+                            <span class="badge bg-secondary">Fair: {{ fair_matches }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>
+                            Matches are ranked using AI algorithms considering skills, education, 
+                            location preferences, and affirmative action compliance.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Matching Results -->
+    <div class="row">
+        <div class="col-12">
+            {% if matches %}
+                <h4 class="text-primary mb-4">
+                    <i class="fas fa-list-ol me-2"></i>Your Top Internship Matches
+                </h4>
+                
+                {% for match in matches %}
+                <div class="match-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-1 text-center">
+                            <div class="match-rank">{{ match.rank }}</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-2">{{ match.internship.title }}</h5>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-building me-1"></i>{{ match.internship.organization }}
+                            </p>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ match.internship.location }} | 
+                                <i class="fas fa-clock me-1"></i>{{ match.internship.duration }} | 
+                                <i class="fas fa-rupee-sign me-1"></i>₹{{ "{:,}".format(match.internship.stipend) }}/month
+                            </p>
+                            
+                            <!-- Required Skills -->
+                            <div class="mb-2">
+                                <small class="text-muted">Required Skills:</small><br>
+                                {% for skill in match.internship.required_skills %}
+                                    {% if skill in student.skills %}
+                                        <span class="badge bg-success me-1">{{ skill }} ✓</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary me-1">{{ skill }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2 text-center">
+                            <div class="match-score">{{ match.score }}%</div>
+                            <div class="progress mt-2">
+                                <div class="progress-bar 
+                                    {{ 'bg-success' if match.score >= 80 else 'bg-warning' if match.score >= 60 else 'bg-danger' }}" 
+                                     style="width: {{ match.score }}%">
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                {{ 'Excellent' if match.score >= 80 else 'Good' if match.score >= 60 else 'Fair' }} Match
+                            </small>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <h6 class="text-secondary mb-2">Why this match?</h6>
+                            <ul class="reasoning-list">
+                                {% for reason in match.reasoning %}
+                                    <li>{{ reason }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Internship Description -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="alert alert-light">
+                                <strong>About this internship:</strong><br>
+                                {{ match.internship.description }}
+                                
+                                <div class="mt-2">
+                                    <span class="badge bg-info me-2">{{ match.internship.sector }}</span>
+                                    <span class="badge bg-secondary me-2">Capacity: {{ match.internship.capacity }}</span>
+                                    {% if match.internship.affirmative_action_required %}
+                                        <span class="badge bg-warning">Affirmative Action</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Action Buttons -->
+                <div class="text-center mt-4">
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="{{ url_for('profile_form') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit me-2"></i>Update My Profile
+                        </a>
+                        <button type="button" class="btn btn-primary" onclick="window.location.reload()">
+                            <i class="fas fa-refresh me-2"></i>Re-run Matching
+                        </button>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-chart-pie me-2"></i>View System Analytics
+                        </a>
+                    </div>
+                </div>
+                
+            {% else %}
+                <!-- No Matches Found -->
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-4"></i>
+                    <h3 class="text-muted mb-3">No Matches Found</h3>
+                    <p class="lead text-muted mb-4">
+                        We couldn't find any suitable internship matches for your current profile. 
+                        Try updating your skills or preferences to get better results.
+                    </p>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="alert alert-warning">
+                                <h6 class="alert-heading">Suggestions to improve your matches:</h6>
+                                <ul class="mb-0 text-start">
+                                    <li>Add more relevant technical skills</li>
+                                    <li>Expand your location preferences</li>
+                                    <li>Update your areas of interest</li>
+                                    <li>Consider internships in related sectors</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a href="{{ url_for('profile_form') }}" class="btn btn-primary">
+                            <i class="fas fa-user-edit me-2"></i>Update My Profile
+                        </a>
+                        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Disclaimer -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h6 class="alert-heading">
+                    <i class="fas fa-info-circle me-2"></i>Important Information
+                </h6>
+                <p class="mb-2">
+                    <strong>About the Matching Algorithm:</strong> Our AI system uses machine learning to analyze 
+                    your profile against internship requirements. Scores are calculated based on skills match, 
+                    education compatibility, location preferences, and affirmative action compliance.
+                </p>
+                <p class="mb-2">
+                    <strong>Next Steps:</strong> These results are recommendations to help you identify suitable 
+                    opportunities. You can apply for multiple internships based on your preferences and eligibility.
+                </p>
+                <p class="mb-0">
+                    <strong>Affirmative Action:</strong> Our system ensures compliance with government policies 
+                    for inclusive participation from rural areas and reserved categories.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress bars
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease-in-out';
+            bar.style.width = width;
+        }, 500);
+    });
+    
+    // Print functionality
+    if (window.matchMedia) {
+        const mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addListener(function(mql) {
+            if (mql.matches) {
+                document.body.classList.add('printing');
+            } else {
+                document.body.classList.remove('printing');
+            }
+        });
+    }
+});
+
+// Print-specific styling
+const printStyles = `
+@media print {
+    .btn, .alert-info:last-child { display: none !important; }
+    .match-item { page-break-inside: avoid; border: 1px solid #ddd; margin-bottom: 20px; }
+    .card { border: 1px solid #ddd; }
+}
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = printStyles;
+document.head.appendChild(styleSheet);
+</script>
+{% endblock %}

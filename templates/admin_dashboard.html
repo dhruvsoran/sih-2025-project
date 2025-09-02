@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - PM Internship Matching{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <!-- Admin Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="text-primary">
+                        <i class="fas fa-chart-line me-3"></i>Admin Dashboard
+                    </h1>
+                    <p class="text-muted">PM Internship Scheme Matching System Analytics</p>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" id="match-all-btn">
+                        <i class="fas fa-magic me-2"></i>Run Matching for All Students
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="fas fa-user-graduate fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">{{ stats.total_students }}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="fas fa-briefcase fa-2x text-success"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">{{ stats.total_internships }}</div>
+                        <div class="stat-label">Available Internships</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="fas fa-handshake fa-2x text-warning"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">{{ stats.total_matches }}</div>
+                        <div class="stat-label">Successful Matches</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="fas fa-percentage fa-2x text-info"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number">{{ "%.1f"|format(stats.match_rate) }}%</div>
+                        <div class="stat-label">Match Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Affirmative Action Compliance -->
+    <div class="row mb-5">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-balance-scale me-2"></i>Affirmative Action Compliance
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="stat-number text-warning">{{ stats.rural_students }}</div>
+                                <div class="stat-label">Rural Students</div>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar bg-warning" 
+                                         style="width: {{ (stats.rural_students / stats.total_students * 100) if stats.total_students > 0 else 0 }}%"
+                                         data-progress="{{ (stats.rural_students / stats.total_students * 100) if stats.total_students > 0 else 0 }}%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <div class="stat-number text-info">{{ stats.sc_st_students }}</div>
+                                <div class="stat-label">SC/ST Students</div>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar bg-info" 
+                                         style="width: {{ (stats.sc_st_students / stats.total_students * 100) if stats.total_students > 0 else 0 }}%"
+                                         data-progress="{{ (stats.sc_st_students / stats.total_students * 100) if stats.total_students > 0 else 0 }}%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Policy Compliance:</strong> The system prioritizes students from rural areas and 
+                        reserved categories to ensure inclusive participation in government internship programs.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Internship Distribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Sector</th>
+                                    <th>Available</th>
+                                    <th>Capacity</th>
+                                    <th>Utilization</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for internship in internships[:5] %}
+                                <tr>
+                                    <td>{{ internship.sector }}</td>
+                                    <td>1</td>
+                                    <td>{{ internship.capacity }}</td>
+                                    <td>
+                                        <div class="progress progress-sm">
+                                            <div class="progress-bar" style="width: {{ (1/internship.capacity*100) }}%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Students -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>Registered Students
+                    </h5>
+                    <span class="badge bg-primary">{{ students|length }} Total</span>
+                </div>
+                <div class="card-body">
+                    {% if students %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Education</th>
+                                    <th>CGPA</th>
+                                    <th>Skills</th>
+                                    <th>Category</th>
+                                    <th>Location Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <strong>{{ student.name }}</strong><br>
+                                            <small class="text-muted">{{ student.email }}</small>
+                                        </div>
+                                    </td>
+                                    <td>{{ student.education }}</td>
+                                    <td>
+                                        <span class="badge {{ 'bg-success' if student.cgpa >= 8 else 'bg-warning' if student.cgpa >= 7 else 'bg-secondary' }}">
+                                            {{ student.cgpa }}/10
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% for skill in student.skills[:3] %}
+                                            <span class="badge bg-primary me-1">{{ skill }}</span>
+                                        {% endfor %}
+                                        {% if student.skills|length > 3 %}
+                                            <span class="text-muted">+{{ student.skills|length - 3 }} more</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-warning' if student.category in ['SC', 'ST'] else 'bg-info' if student.category == 'OBC' else 'bg-secondary' }}">
+                                            {{ student.category }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-success' if student.location_type == 'rural' else 'bg-primary' }}">
+                                            {{ student.location_type.title() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('run_matching', student_id=student.id) }}" 
+                                           class="btn btn-sm btn-outline-primary" data-tooltip="Run matching for this student">
+                                            <i class="fas fa-magic"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Students Registered Yet</h5>
+                        <p class="text-muted">Students will appear here once they create their profiles.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Matches -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-handshake me-2"></i>Recent Matching Results
+                    </h5>
+                    <span class="badge bg-success">{{ matches|length }} Results</span>
+                </div>
+                <div class="card-body">
+                    {% if matches %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Top Match</th>
+                                    <th>Score</th>
+                                    <th>Total Matches</th>
+                                    <th>Timestamp</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for match in matches %}
+                                {% set student = students|selectattr('id', 'equalto', match.student_id)|first %}
+                                {% if student and match.matches %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ student.name if student else 'Unknown' }}</strong>
+                                    </td>
+                                    <td>
+                                        {{ match.matches[0].internship.title if match.matches else 'No matches' }}
+                                    </td>
+                                    <td>
+                                        {% if match.matches %}
+                                        <span class="badge {{ 'bg-success' if match.matches[0].score >= 80 else 'bg-warning' if match.matches[0].score >= 60 else 'bg-danger' }}">
+                                            {{ match.matches[0].score }}%
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ match.matches|length if match.matches else 0 }}</td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ match.timestamp.split('T')[0] if match.timestamp else 'Unknown' }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('run_matching', student_id=match.student_id) }}" 
+                                           class="btn btn-sm btn-outline-primary" data-tooltip="View detailed results">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Matching Results Yet</h5>
+                        <p class="text-muted">Run the matching algorithm to see results here.</p>
+                        <button type="button" class="btn btn-primary" onclick="document.getElementById('match-all-btn').click()">
+                            <i class="fas fa-magic me-2"></i>Run Matching Now
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Update progress bars with animation
+    const progressBars = document.querySelectorAll('.progress-bar[data-progress]');
+    progressBars.forEach(bar => {
+        const targetWidth = bar.dataset.progress;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease-in-out';
+            bar.style.width = targetWidth;
+        }, 500);
+    });
+});
+</script>
+{% endblock %}

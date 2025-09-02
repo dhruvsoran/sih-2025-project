@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Create Profile - PM Internship Matching{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2 class="text-primary mb-2">
+                        <i class="fas fa-user-plus me-2"></i>Create Your Student Profile
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Complete your profile to get matched with the best internship opportunities
+                    </p>
+                </div>
+                
+                <div class="card-body">
+                    <form method="POST" id="profile-form" novalidate>
+                        <!-- Personal Information -->
+                        <div class="mb-4">
+                            <h5 class="text-secondary mb-3">
+                                <i class="fas fa-user me-2"></i>Personal Information
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <div class="invalid-feedback">Please provide your full name.</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <div class="invalid-feedback">Please provide a valid email address.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                    <div class="invalid-feedback">Please provide your phone number.</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="age" class="form-label">Age *</label>
+                                    <input type="number" class="form-control" id="age" name="age" 
+                                           min="18" max="35" required onchange="validateAge(this)">
+                                    <div class="invalid-feedback">Age must be between 18 and 35 years.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Educational Background -->
+                        <div class="mb-4">
+                            <h5 class="text-secondary mb-3">
+                                <i class="fas fa-graduation-cap me-2"></i>Educational Background
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="education" class="form-label">Education Level *</label>
+                                    <select class="form-select" id="education" name="education" required>
+                                        <option value="">Select your education level</option>
+                                        <option value="high school">High School</option>
+                                        <option value="12th">12th Standard</option>
+                                        <option value="diploma">Diploma</option>
+                                        <option value="undergraduate">Undergraduate</option>
+                                        <option value="bachelor">Bachelor's Degree</option>
+                                        <option value="postgraduate">Postgraduate</option>
+                                        <option value="master">Master's Degree</option>
+                                        <option value="phd">PhD</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select your education level.</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="cgpa" class="form-label">CGPA/Percentage *</label>
+                                    <input type="number" class="form-control" id="cgpa" name="cgpa" 
+                                           min="0" max="10" step="0.01" required onchange="validateCGPA(this)">
+                                    <small class="form-text text-muted">Enter CGPA out of 10 or percentage out of 100</small>
+                                    <div class="invalid-feedback">Please provide your CGPA (0-10) or percentage.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="college" class="form-label">College/Institution *</label>
+                                <input type="text" class="form-control" id="college" name="college" required>
+                                <div class="invalid-feedback">Please provide your college/institution name.</div>
+                            </div>
+                        </div>
+
+                        <!-- Skills and Interests -->
+                        <div class="mb-4">
+                            <h5 class="text-secondary mb-3">
+                                <i class="fas fa-cogs me-2"></i>Skills and Interests
+                            </h5>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Technical Skills *</label>
+                                <div id="skills-container"></div>
+                                <small class="form-text text-muted">Select your technical skills and competencies</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Areas of Interest *</label>
+                                <div id="interests-container"></div>
+                                <small class="form-text text-muted">Choose sectors and fields that interest you</small>
+                            </div>
+                        </div>
+
+                        <!-- Location and Preferences -->
+                        <div class="mb-4">
+                            <h5 class="text-secondary mb-3">
+                                <i class="fas fa-map-marker-alt me-2"></i>Location and Preferences
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="location_preference" class="form-label">Preferred Location *</label>
+                                    <select class="form-select" id="location_preference" name="location_preference" required>
+                                        <option value="">Select preferred location</option>
+                                        <option value="any">Any Location</option>
+                                        <option value="new delhi">New Delhi</option>
+                                        <option value="mumbai">Mumbai</option>
+                                        <option value="bangalore">Bangalore</option>
+                                        <option value="chennai">Chennai</option>
+                                        <option value="kolkata">Kolkata</option>
+                                        <option value="hyderabad">Hyderabad</option>
+                                        <option value="pune">Pune</option>
+                                        <option value="bhopal">Bhopal</option>
+                                        <option value="ahmedabad">Ahmedabad</option>
+                                        <option value="jaipur">Jaipur</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select your location preference.</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="location_type" class="form-label">Location Type *</label>
+                                    <select class="form-select" id="location_type" name="location_type" required>
+                                        <option value="">Select location type</option>
+                                        <option value="urban">Urban</option>
+                                        <option value="rural">Rural/Aspirational District</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select your location type.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Social Category and Experience -->
+                        <div class="mb-4">
+                            <h5 class="text-secondary mb-3">
+                                <i class="fas fa-info-circle me-2"></i>Additional Information
+                            </h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="category" class="form-label">Social Category *</label>
+                                    <select class="form-select" id="category" name="category" required>
+                                        <option value="">Select category</option>
+                                        <option value="General">General</option>
+                                        <option value="OBC">OBC (Other Backward Class)</option>
+                                        <option value="SC">SC (Scheduled Caste)</option>
+                                        <option value="ST">ST (Scheduled Tribe)</option>
+                                        <option value="EWS">EWS (Economically Weaker Section)</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select your social category.</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="experience" class="form-label">Previous Experience *</label>
+                                    <select class="form-select" id="experience" name="experience" required>
+                                        <option value="">Select experience level</option>
+                                        <option value="fresher">Fresher (No experience)</option>
+                                        <option value="0-6 months">0-6 months</option>
+                                        <option value="6-12 months">6-12 months</option>
+                                        <option value="1-2 years">1-2 years</option>
+                                        <option value="2+ years">2+ years</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select your experience level.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Past Participation in Government Programs</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="past_participation" 
+                                           id="participation_no" value="no" checked>
+                                    <label class="form-check-label" for="participation_no">
+                                        No, this is my first government internship application
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="past_participation" 
+                                           id="participation_yes" value="yes">
+                                    <label class="form-check-label" for="participation_yes">
+                                        Yes, I have participated in government programs before
+                                    </label>
+                                </div>
+                                <small class="form-text text-muted">
+                                    This helps us prioritize first-time participants
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Create Profile & Find Matches
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Information Cards -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h5>Secure & Confidential</h5>
+                    <p class="text-muted">
+                        Your information is secure and will only be used for matching purposes.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-balance-scale fa-3x text-success mb-3"></i>
+                    <h5>Fair & Inclusive</h5>
+                    <p class="text-muted">
+                        Our system ensures equal opportunities for all students with affirmative action compliance.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-rocket fa-3x text-warning mb-3"></i>
+                    <h5>Quick Matching</h5>
+                    <p class="text-muted">
+                        Get instant results with our AI-powered matching algorithm.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.getElementById('profile-form');
+    
+    form.addEventListener('submit', function(e) {
+        if (!validateForm('profile-form')) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+    
+    // Real-time validation
+    const requiredFields = form.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        field.addEventListener('blur', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+        
+        field.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.value.trim()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+    
+    // CGPA conversion helper
+    const cgpaField = document.getElementById('cgpa');
+    cgpaField.addEventListener('blur', function() {
+        const value = parseFloat(this.value);
+        if (value > 10) {
+            // Assume it's percentage, convert to CGPA
+            const cgpa = value / 10;
+            this.value = cgpa.toFixed(2);
+            showNotification('Auto-converted', 'Percentage converted to CGPA scale (0-10)', 'info');
+        }
+    });
+});
+</script>
+{% endblock %}
