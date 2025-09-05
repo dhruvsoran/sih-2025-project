@@ -669,3 +669,70 @@ footer {
     background-color: #c82333;
     border-color: #bd2130;
 }
+/* === Navbar Enhancements === */
+
+/* Brand hover animation */
+.navbar-brand {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+.navbar-brand:hover {
+    transform: scale(1.08);
+    color: var(--color-accent) !important;
+}
+
+/* Nav links hover underline effect */
+.navbar-nav .nav-link {
+    position: relative;
+    padding: 0.5rem 0.75rem;
+    transition: color 0.3s ease;
+}
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: var(--color-accent);
+    transition: width 0.3s ease;
+}
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+    width: 100%;
+}
+
+/* Smooth color transition */
+.navbar-nav .nav-link:hover {
+    color: var(--color-accent) !important;
+}
+
+/* Register button special styling */
+.navbar-nav .nav-link.register-btn {
+    background-color: var(--color-accent);
+    border-radius: 20px;
+    padding: 6px 16px;
+    margin-left: 8px;
+    color: var(--color-text-light) !important;
+    transition: all 0.3s ease;
+}
+.navbar-nav .nav-link.register-btn:hover {
+    background-color: transparent;
+    color: var(--color-accent) !important;
+    border: 1px solid var(--color-accent);
+    transform: scale(1.05);
+}
+
+/* Navbar entrance animation */
+.navbar {
+    animation: slideDown 0.6s ease;
+}
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
