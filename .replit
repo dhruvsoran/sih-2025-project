@@ -2,7 +2,7 @@ modules = ["python-3.11"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["openssl", "postgresql"]
+packages = ["glibcLocales", "openssl", "postgresql"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -44,3 +44,7 @@ args = "uv add flask-session"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 35813
+externalPort = 3000
