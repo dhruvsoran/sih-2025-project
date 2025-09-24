@@ -14,10 +14,13 @@
                     </h1>
                     <p class="text-muted">PM Internship Scheme Matching System Analytics</p>
                 </div>
-                <div>
+                <div class="d-flex gap-2">
                     <button type="button" class="btn btn-primary" id="match-all-btn">
                         <i class="fas fa-magic me-2"></i>Run Matching for All Students
                     </button>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
                 </div>
             </div>
         </div>
