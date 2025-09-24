@@ -4,9 +4,29 @@ from data_manager import DataManager
 from matching_engine import MatchingEngine
 import uuid
 from datetime import datetime
+import hashlib
+from functools import wraps
 
 data_manager = DataManager()
 matching_engine = MatchingEngine()
+
+def hash_password(password: str) -> str:
+    """Hash password using SHA-256"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(password: str, hashed: str) -> bool:
+    """Verify password against hash"""
+    return hash_password(password) == hashed
+
+def admin_required(f):
+    """Decorator to require admin authentication"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_id') or not session.get('is_admin'):
+            flash('Access denied. Please log in as admin.', 'error')
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/')
 def index():
@@ -21,6 +41,7 @@ def student_dashboard():
     return render_template('student_dashboard.html', student=student)
 
 @app.route('/admin')
+@admin_required
 def admin_dashboard():
     students = data_manager.get_all_students()
     internships = data_manager.get_all_internships()
@@ -107,7 +128,63 @@ def run_matching(student_id):
                          student=student, 
                          matches=matches)
 
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        if not email or not password:
+            flash('Email and password are required.', 'error')
+        else:
+            admin = data_manager.get_admin_by_email(email)
+            if admin and verify_password(password, admin['password']):
+                session['admin_id'] = admin['id']
+                session['is_admin'] = True
+                flash('Successfully logged in as admin!', 'success')
+                return redirect(url_for('admin_dashboard'))
+            else:
+                flash('Invalid email or password.', 'error')
+    
+    return render_template('admin_login.html')
+
+@app.route('/admin/signup', methods=['GET', 'POST'])
+def admin_signup():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # Validation
+        if not all([name, email, password, confirm_password]):
+            flash('All fields are required.', 'error')
+        elif password != confirm_password:
+            flash('Passwords do not match.', 'error')
+        elif password and len(password) < 6:
+            flash('Password must be at least 6 characters long.', 'error')
+        elif email and data_manager.get_admin_by_email(email):
+            flash('Email already exists.', 'error')
+        else:
+            # Create admin account
+            admin_data = {
+                'id': str(uuid.uuid4()),
+                'name': name,
+                'email': email,
+                'password': hash_password(password) if password else '',
+                'created_at': datetime.now().isoformat()
+            }
+            
+            data_manager.add_admin(admin_data)
+            session['admin_id'] = admin_data['id']
+            session['is_admin'] = True
+            flash('Admin account created successfully!', 'success')
+            return redirect(url_for('admin_dashboard'))
+    
+    return render_template('admin_signup.html')
+
 @app.route('/api/match-all')
+@admin_required
 def match_all_students():
     """API endpoint to run matching for all students"""
     students = data_manager.get_all_students()
@@ -129,4 +206,5 @@ def match_all_students():
 @app.route('/logout')
 def logout():
     session.clear()
+    flash('You have been logged out successfully.', 'success')
     return redirect(url_for('index'))

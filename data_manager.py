@@ -10,6 +10,7 @@ class DataManager:
         self.students_file = os.path.join(self.data_dir, 'students.json')
         self.internships_file = os.path.join(self.data_dir, 'internships.json')
         self.matches_file = os.path.join(self.data_dir, 'matches.json')
+        self.admins_file = os.path.join(self.data_dir, 'admins.json')
         
         # Create data directory if it doesn't exist
         os.makedirs(self.data_dir, exist_ok=True)
@@ -27,6 +28,9 @@ class DataManager:
         
         if not os.path.exists(self.matches_file):
             self._save_json(self.matches_file, [])
+            
+        if not os.path.exists(self.admins_file):
+            self._save_json(self.admins_file, [])
     
     def _load_json(self, filepath: str) -> List[Dict[str, Any]]:
         """Load data from JSON file"""
@@ -193,3 +197,21 @@ class DataManager:
                 'affirmative_action_required': True
             }
         ]
+    
+    def get_all_admins(self) -> List[Dict[str, Any]]:
+        """Get all admin users"""
+        return self._load_json(self.admins_file)
+    
+    def get_admin_by_email(self, email: str) -> Dict[str, Any] | None:
+        """Get admin by email"""
+        admins = self.get_all_admins()
+        for admin in admins:
+            if admin.get('email') == email:
+                return admin
+        return None
+    
+    def add_admin(self, admin_data: Dict[str, Any]):
+        """Add a new admin user"""
+        admins = self.get_all_admins()
+        admins.append(admin_data)
+        self._save_json(self.admins_file, admins)
