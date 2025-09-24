@@ -156,55 +156,126 @@
                                 <i class="fas fa-rupee-sign me-1"></i>₹{{ "{:,}".format(match.internship.stipend) }}/month
                             </p>
                             
-                            <!-- Required Skills -->
-                            <div class="mb-2">
-                                <small class="text-muted">Required Skills:</small><br>
-                                {% for skill in match.internship.required_skills %}
-                                    {% if skill in student.skills %}
-                                        <span class="badge bg-success me-1">{{ skill }} ✓</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary me-1">{{ skill }}</span>
+                            <!-- Skill Matching Analysis -->
+                            <div class="mb-3">
+                                {% set matched_skills = (match.internship.required_skills | select('in', student.skills) | list) %}
+                                {% set skill_match_percentage = ((matched_skills | length) / (match.internship.required_skills | length) * 100) | round | int if match.internship.required_skills else 0 %}
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted"><strong>Skills Compatibility:</strong></small>
+                                    <span class="badge bg-info">{{ skill_match_percentage }}% Match</span>
+                                </div>
+                                
+                                <div class="skill-analysis">
+                                    {% if matched_skills %}
+                                        <div class="mb-2">
+                                            <small class="text-success"><i class="fas fa-check-circle me-1"></i>You have ({{ matched_skills | length }}/{{ match.internship.required_skills | length }}):</small><br>
+                                            {% for skill in matched_skills %}
+                                                <span class="badge bg-success me-1">{{ skill }} ✓</span>
+                                            {% endfor %}
+                                        </div>
                                     {% endif %}
-                                {% endfor %}
+                                    
+                                    {% set missing_skills = (match.internship.required_skills | reject('in', student.skills) | list) %}
+                                    {% if missing_skills %}
+                                        <div class="mb-2">
+                                            <small class="text-warning"><i class="fas fa-exclamation-triangle me-1"></i>Skills to develop:</small><br>
+                                            {% for skill in missing_skills %}
+                                                <span class="badge bg-warning text-dark me-1">{{ skill }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="col-md-2 text-center">
-                            <div class="match-score">{{ match.score }}%</div>
-                            <div class="progress mt-2">
+                        <div class="col-md-3 text-center">
+                            <div class="match-score mb-2">{{ match.score }}%</div>
+                            <div class="progress mb-2" style="height: 8px;">
                                 <div class="progress-bar 
                                     {{ 'bg-success' if match.score >= 80 else 'bg-warning' if match.score >= 60 else 'bg-danger' }}" 
                                      style="width: {{ match.score }}%">
                                 </div>
                             </div>
-                            <small class="text-muted">
-                                {{ 'Excellent' if match.score >= 80 else 'Good' if match.score >= 60 else 'Fair' }} Match
-                            </small>
+                            <div class="text-center">
+                                <span class="badge {{ 'bg-success' if match.score >= 80 else 'bg-warning' if match.score >= 60 else 'bg-danger' }}">
+                                    {{ 'Excellent' if match.score >= 80 else 'Good' if match.score >= 60 else 'Fair' }} Match
+                                </span>
+                            </div>
+                            
+                            <!-- Quick Stats -->
+                            {% set matched_skills_count = (match.internship.required_skills | select('in', student.skills) | list | length) %}
+                            {% set total_skills_count = (match.internship.required_skills | length) %}
+                            <div class="mt-2">
+                                <small class="text-muted">Skills: {{ matched_skills_count }}/{{ total_skills_count }}</small><br>
+                                <small class="text-muted">Capacity: {{ match.internship.capacity }}</small>
+                            </div>
                         </div>
                         
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <h6 class="text-secondary mb-2">Why this match?</h6>
                             <ul class="reasoning-list">
-                                {% for reason in match.reasoning %}
-                                    <li>{{ reason }}</li>
+                                {% for reason in match.reasoning[:3] %}
+                                    <li><small>{{ reason }}</small></li>
                                 {% endfor %}
                             </ul>
+                            
+                            <div class="mt-2">
+                                <a href="#match-{{ match.rank }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse">
+                                    <i class="fas fa-info-circle me-1"></i>Details
+                                </a>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Internship Description -->
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <div class="alert alert-light">
-                                <strong>About this internship:</strong><br>
-                                {{ match.internship.description }}
-                                
-                                <div class="mt-2">
-                                    <span class="badge bg-info me-2">{{ match.internship.sector }}</span>
-                                    <span class="badge bg-secondary me-2">Capacity: {{ match.internship.capacity }}</span>
-                                    {% if match.internship.affirmative_action_required %}
-                                        <span class="badge bg-warning">Affirmative Action</span>
-                                    {% endif %}
+                    <!-- Collapsible Detailed Information -->
+                    <div class="collapse mt-3" id="match-{{ match.rank }}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="text-primary mb-3">About this Internship</h6>
+                                        <p>{{ match.internship.description }}</p>
+                                        
+                                        <h6 class="text-primary mb-2">Complete Reasoning</h6>
+                                        <ul>
+                                            {% for reason in match.reasoning %}
+                                                <li>{{ reason }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <h6 class="text-primary mb-3">Internship Details</h6>
+                                        <table class="table table-sm table-borderless">
+                                            <tr>
+                                                <td><strong>Sector:</strong></td>
+                                                <td><span class="badge bg-info">{{ match.internship.sector }}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Duration:</strong></td>
+                                                <td>{{ match.internship.duration }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Stipend:</strong></td>
+                                                <td>₹{{ "{:,}".format(match.internship.stipend) }}/month</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Capacity:</strong></td>
+                                                <td>{{ match.internship.capacity }} positions</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Education:</strong></td>
+                                                <td>{{ match.internship.education_requirement|title }}</td>
+                                            </tr>
+                                            {% if match.internship.affirmative_action_required %}
+                                            <tr>
+                                                <td><strong>Special:</strong></td>
+                                                <td><span class="badge bg-warning">Affirmative Action</span></td>
+                                            </tr>
+                                            {% endif %}
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -221,8 +292,8 @@
                         <button type="button" class="btn btn-primary" onclick="window.location.reload()">
                             <i class="fas fa-refresh me-2"></i>Re-run Matching
                         </button>
-                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-chart-pie me-2"></i>View System Analytics
+                        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-home me-2"></i>Dashboard
                         </a>
                     </div>
                 </div>

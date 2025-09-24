@@ -25,6 +25,11 @@ class DataManager:
         
         if not os.path.exists(self.internships_file):
             self._save_json(self.internships_file, self._get_sample_internships())
+        else:
+            # Check if internships file is empty and reseed with comprehensive data
+            existing_internships = self._load_json(self.internships_file)
+            if not existing_internships:  # Empty list, reseed with comprehensive data
+                self._save_json(self.internships_file, self._get_sample_internships())
         
         if not os.path.exists(self.matches_file):
             self._save_json(self.matches_file, [])
