@@ -105,12 +105,22 @@ def index():
 def student_login():
     if session.get('student_id'):
         return redirect(url_for('student_dashboard'))
+    if session.get('is_admin'):
+        return redirect(url_for('admin_dashboard'))
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         if not email or not password:
             flash('Email and password are required.', 'error')
         else:
+            # Check admin first
+            admin = data_manager.get_admin_by_email(email)
+            if admin and check_password_hash(admin['password'], password):
+                session['admin_id'] = admin['id']
+                session['is_admin'] = True
+                flash('Welcome back, Admin!', 'success')
+                return redirect(url_for('admin_dashboard'))
+            # Check student
             student = data_manager.get_student_by_email(email)
             if student and student.get('password') and check_password_hash(student['password'], password):
                 session['student_id'] = student['id']
