@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+flask_session/
+data/internship.db
+data/*.db
+*.sqlite3
+node_modules/
+package-lock.json
+.env
+*.egg-info/
+dist/
+build/
+.vscode/
+.idea/
+*.swp
+*.swo

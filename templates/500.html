@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}500 — Server Error | Prayaas{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center" style="min-height:70vh;padding:3rem 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <div style="width:100px;height:100px;border-radius:28px;background:rgba(255,0,128,.08);border:1px solid rgba(255,0,128,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                    <span style="font-size:3rem;font-weight:900;background:linear-gradient(135deg,var(--pink),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">500</span>
+                </div>
+                <h2 style="font-size:1.75rem;margin-bottom:.75rem;">Server Error</h2>
+                <p style="color:var(--gray-3);max-width:400px;margin:0 auto 2rem;font-size:1rem;">
+                    Something went wrong on our end. Please try again later.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-glow">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <button onclick="location.reload()" class="btn btn-outline-secondary">
+                        <i class="fas fa-redo me-2"></i>Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

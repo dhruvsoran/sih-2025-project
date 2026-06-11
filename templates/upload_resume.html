@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Resume — Prayaas{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <div style="width:64px;height:64px;border-radius:18px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                    <i class="fas fa-file-upload" style="color:var(--green);font-size:1.5rem;"></i>
+                </div>
+                <h2 style="font-size:1.75rem;">Upload Your Resume</h2>
+                <p style="color:var(--gray-3);max-width:480px;margin:0 auto;font-size:.9375rem;">
+                    Our AI will analyze your resume and recommend the best internship opportunities for you.
+                </p>
+            </div>
+
+            <div class="card card-glow">
+                <div class="card-body p-4 p-md-5">
+                    <form method="POST" enctype="multipart/form-data" id="resume-form">
+                        
+                        <!-- Upload Area -->
+                        <div class="mb-4">
+                            <div id="upload-area" style="border:2px dashed var(--glass-border);border-radius:var(--radius-lg);padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .3s ease;background:rgba(var(--blue-rgb),.02);">
+                                <div style="width:72px;height:72px;border-radius:20px;background:rgba(var(--blue-rgb),.1);border:1px solid rgba(var(--blue-rgb),.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                                    <i class="fas fa-cloud-upload-alt" style="color:var(--blue);font-size:1.75rem;"></i>
+                                </div>
+                                <h5 style="font-size:1.0625rem;margin-bottom:.5rem;">Drag & drop your resume here</h5>
+                                <p style="color:var(--gray-3);font-size:.875rem;margin-bottom:1rem;">or click to browse files</p>
+                                <div style="font-size:.75rem;color:var(--gray-4);">
+                                    <i class="fas fa-file-pdf me-1" style="color:var(--pink);"></i>PDF
+                                    <span class="mx-2">·</span>
+                                    <i class="fas fa-file-word me-1" style="color:var(--blue);"></i>DOCX
+                                    <span class="mx-2">·</span>
+                                    <span>Max 5MB</span>
+                                </div>
+                                <input type="file" name="resume" id="resume-input" accept=".pdf,.docx,.doc" style="display:none;" required>
+                            </div>
+                            
+                            <!-- File Preview -->
+                            <div id="file-preview" style="display:none;margin-top:1rem;">
+                                <div class="card" style="border-radius:var(--radius);">
+                                    <div class="card-body p-3">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div style="width:44px;height:44px;border-radius:12px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                <i class="fas fa-file-alt" style="color:var(--blue);"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div id="file-name" style="font-size:.875rem;font-weight:600;color:var(--gray-1);"></div>
+                                                <div id="file-size" style="font-size:.75rem;color:var(--gray-4);"></div>
+                                            </div>
+                                            <button type="button" id="remove-file" style="background:none;border:none;color:var(--pink);cursor:pointer;padding:.5rem;">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info Box -->
+                        <div class="mb-4" style="background:rgba(var(--blue-rgb),.05);border:1px solid rgba(var(--blue-rgb),.15);border-radius:var(--radius);padding:1rem 1.25rem;">
+                            <div style="font-size:.8125rem;font-weight:600;color:var(--blue);margin-bottom:.5rem;">
+                                <i class="fas fa-info-circle me-1"></i>How it works
+                            </div>
+                            <div style="font-size:.8125rem;color:var(--gray-3);">
+                                <div class="mb-1"><i class="fas fa-check me-2" style="color:var(--green);font-size:.6875rem;"></i>AI extracts skills, education, and experience from your resume</div>
+                                <div class="mb-1"><i class="fas fa-check me-2" style="color:var(--green);font-size:.6875rem;"></i>Matches are calculated against government internships</div>
+                                <div><i class="fas fa-check me-2" style="color:var(--green);font-size:.6875rem;"></i>Get personalized recommendations in seconds</div>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg btn-glow" style="min-width:280px;" id="submit-btn">
+                                <i class="fas fa-magic me-2"></i>Analyze Resume & Find Matches
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Trust indicators -->
+            <div class="row g-3 mt-4">
+                <div class="col-md-4">
+                    <div class="card h-100" style="border-radius:var(--radius);">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-lock mb-2" style="color:var(--green);font-size:1.25rem;"></i>
+                            <h6 style="font-size:.8125rem;margin-bottom:.25rem;">Secure Upload</h6>
+                            <p style="font-size:.75rem;color:var(--gray-4);margin:0;">Your resume is processed securely</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100" style="border-radius:var(--radius);">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-brain mb-2" style="color:var(--violet);font-size:1.25rem;"></i>
+                            <h6 style="font-size:.8125rem;margin-bottom:.25rem;">AI Analysis</h6>
+                            <p style="font-size:.75rem;color:var(--gray-4);margin:0;">Smart extraction of skills & experience</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100" style="border-radius:var(--radius);">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-bolt mb-2" style="color:var(--amber);font-size:1.25rem;"></i>
+                            <h6 style="font-size:.8125rem;margin-bottom:.25rem;">Instant Results</h6>
+                            <p style="font-size:.75rem;color:var(--gray-4);margin:0;">Get matched within seconds</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('resume-input');
+    const filePreview = document.getElementById('file-preview');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const removeFile = document.getElementById('remove-file');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    // Click to upload
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--blue)';
+        uploadArea.style.background = 'rgba(var(--blue-rgb),.08)';
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = 'var(--glass-border)';
+        uploadArea.style.background = 'rgba(var(--blue-rgb),.02)';
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--glass-border)';
+        uploadArea.style.background = 'rgba(var(--blue-rgb),.02)';
+        
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            fileInput.files = files;
+            handleFile(files[0]);
+        }
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', function() {
+        if (this.files.length) {
+            handleFile(this.files[0]);
+        }
+    });
+    
+    // Handle file selection
+    function handleFile(file) {
+        const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        const allowedExtensions = ['.pdf', '.docx', '.doc'];
+        const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+        
+        if (!allowedExtensions.includes(ext)) {
+            alert('Please upload a PDF or DOCX file.');
+            return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be under 5MB.');
+            return;
+        }
+        
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        
+        uploadArea.style.display = 'none';
+        filePreview.style.display = 'block';
+    }
+    
+    // Remove file
+    removeFile.addEventListener('click', () => {
+        fileInput.value = '';
+        uploadArea.style.display = 'block';
+        filePreview.style.display = 'none';
+    });
+    
+    // Format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+    
+    // Form submission
+    document.getElementById('resume-form').addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Analyzing Resume...';
+    });
+});
+</script>
+{% endblock %}

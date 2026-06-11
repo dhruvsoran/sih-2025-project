@@ -1,28 +1,109 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Hero Section -->
+<!-- Hero Section — Split Layout -->
 <section class="hero">
+    <!-- Liquid Motion Blobs -->
+    <div class="liquid-blob liquid-blob-1"></div>
+    <div class="liquid-blob liquid-blob-2"></div>
+    <div class="liquid-blob liquid-blob-3"></div>
+    
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <div class="scheme-badge">
-                    <i class="fas fa-star me-2"></i>PM Internship Scheme
+        <div class="row align-items-center min-vh-75">
+            <!-- Left: Copy -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="scheme-badge animate-on-scroll">
+                    <i class="fas fa-star"></i>AI-Powered Job Matching
                 </div>
-                <h1 class="display-4 fw-bold mb-4">
-                    AI-Powered PM Internship Matching
+                <h1 class="animate-on-scroll delay-1">
+                    Find Your Perfect<br>
+                    <span class="grad-text">Internship & Job</span>
                 </h1>
-                <p class="lead mb-4">
-                    Revolutionizing the way students connect with government internship opportunities through 
-                    intelligent matching algorithms that consider skills, preferences, and affirmative action compliance.
+                <p class="animate-on-scroll delay-2" style="font-size:1.125rem;max-width:480px;">
+                    Search across Indeed, LinkedIn, Naukri, Internshala & Government portals — all in one place. 
+                    AI-powered matching for the best opportunities.
                 </p>
-                <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="{{ url_for('profile_form') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-user-plus me-2"></i>Register as Student
-                    </a>
-                    <a href="{{ url_for('admin_login') }}" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-shield-alt me-2"></i>Admin Login
-                    </a>
+                <div class="d-flex gap-3 flex-wrap animate-on-scroll delay-3">
+                    {% if session.student_id %}
+                        <a href="{{ url_for('student_dashboard') }}" class="btn btn-primary btn-lg btn-glow">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('profile_form') }}" class="btn btn-primary btn-lg btn-glow">
+                            <i class="fas fa-user-plus me-2"></i>Get Started Free
+                        </a>
+                        <a href="{{ url_for('student_login') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </a>
+                    {% endif %}
+                </div>
+                <!-- Platform logos -->
+                <div class="d-flex align-items-center gap-3 mt-4 animate-on-scroll delay-4" style="opacity:.7;">
+                    <span style="font-size:.75rem;color:var(--gray-4);">Trusted platforms:</span>
+                    <div class="d-flex gap-3 align-items-center">
+                        <span style="font-size:.6875rem;font-weight:700;color:#2164f3;">Indeed</span>
+                        <span style="font-size:.6875rem;font-weight:700;color:#0a66c2;">LinkedIn</span>
+                        <span style="font-size:.6875rem;font-weight:700;color:#f06e38;">Naukri</span>
+                        <span style="font-size:.6875rem;font-weight:700;color:#00a85f;">Internshala</span>
+                        <span style="font-size:.6875rem;font-weight:700;color:var(--blue);">Govt</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Right: Mockup / Glass Cards -->
+            <div class="col-lg-6">
+                <div class="position-relative animate-on-scroll delay-2">
+                    <!-- Glow backdrop -->
+                    <div style="position:absolute;top:50%;left:50%;width:400px;height:400px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(var(--blue-rgb),.2) 0%,transparent 70%);pointer-events:none;border-radius:50%;filter:blur(40px);"></div>
+                    
+                    <!-- Floating mockup cards -->
+                    <div class="position-relative" style="min-height:380px;">
+                        <!-- Card 1: Stats -->
+                        <div class="position-absolute animate-on-scroll delay-3" style="top:0;left:5%;width:220px;z-index:3;">
+                            <div class="card card-glow" style="transform:rotate(-3deg);">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div style="width:36px;height:36px;border-radius:10px;background:var(--grad-brand);display:flex;align-items:center;justify-content:center;">
+                                            <i class="fas fa-bolt" style="color:var(--bg);font-size:.875rem;"></i>
+                                        </div>
+                                        <small style="color:var(--gray-3);font-size:.75rem;">Match Score</small>
+                                    </div>
+                                    <div style="font-size:2rem;font-weight:800;background:var(--grad-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">94%</div>
+                                    <div class="progress mt-1" style="height:4px;"><div class="progress-bar" style="width:94%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 2: Skill match -->
+                        <div class="position-absolute animate-on-scroll delay-4" style="top:80px;right:5%;width:240px;z-index:2;">
+                            <div class="card card-glow" style="transform:rotate(2deg);">
+                                <div class="card-body p-3">
+                                    <div style="font-size:.75rem;color:var(--gray-3);margin-bottom:.5rem;">AI Analysis</div>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <span class="skill-tag" style="font-size:.6875rem;padding:.2rem .5rem;">Python</span>
+                                        <span class="skill-tag" style="font-size:.6875rem;padding:.2rem .5rem;">ML</span>
+                                        <span class="skill-tag" style="font-size:.6875rem;padding:.2rem .5rem;">Data</span>
+                                        <span class="skill-tag secondary" style="font-size:.6875rem;padding:.2rem .5rem;">+3</span>
+                                    </div>
+                                    <div style="font-size:.6875rem;color:var(--green);margin-top:.5rem;"><i class="fas fa-check-circle me-1"></i>87% Skill Match</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 3: Notification -->
+                <div class="position-absolute animate-on-scroll delay-5" style="bottom:20px;left:10%;width:260px;z-index:4;">
+                    <div class="card card-glow">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width:40px;height:40px;border-radius:12px;background:rgba(0,255,136,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                            <i class="fas fa-check" style="color:var(--green);"></i>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:.8125rem;font-weight:600;color:#fff;">Match Found!</div>
+                                            <div style="font-size:.75rem;color:var(--gray-3);">ISRO · Space Research Intern</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -30,102 +111,83 @@
 </section>
 
 <!-- Features Section -->
-<section class="py-5">
+<section class="py-5" style="padding-top:5rem!important;padding-bottom:5rem!important;">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center mb-5">
-                <h2 class="text-primary">Intelligent Matching Features</h2>
-                <p class="text-muted">Advanced AI algorithms ensure optimal student-internship pairing</p>
-            </div>
+        <div class="text-center mb-5">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--blue);font-weight:600;margin-bottom:.75rem;" class="animate-on-scroll">Features</div>
+            <h2 class="animate-on-scroll delay-1">Intelligent Matching,<br><span class="gradient-text-animated">Real Impact</span></h2>
+            <p class="animate-on-scroll delay-2" style="max-width:520px;margin:0 auto;color:var(--gray-3);">Advanced algorithms ensure every student finds the opportunity that fits them best.</p>
         </div>
         
         <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-brain fa-3x text-primary"></i>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-1">
+                <div class="card card-glow h-100">
+                    <div class="card-body text-center p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                            <i class="fas fa-brain" style="color:var(--blue);font-size:1.25rem;"></i>
                         </div>
-                        <h5 class="card-title">AI-Powered Matching</h5>
-                        <p class="card-text text-muted">
-                            Advanced machine learning algorithms analyze student profiles against internship requirements 
-                            to find the best matches based on skills, education, and preferences.
-                        </p>
+                        <h5 style="font-size:1.0625rem;margin-bottom:.5rem;">AI-Powered Matching</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Machine learning analyzes profiles against requirements for optimal pairing.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-balance-scale fa-3x text-primary"></i>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-2">
+                <div class="card card-glow h-100">
+                    <div class="card-body text-center p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(var(--violet-rgb),.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                            <i class="fas fa-balance-scale" style="color:var(--violet);font-size:1.25rem;"></i>
                         </div>
-                        <h5 class="card-title">Affirmative Action</h5>
-                        <p class="card-text text-muted">
-                            Ensures compliance with affirmative action policies for rural/aspirational districts 
-                            and social categories (SC/ST/OBC) to promote inclusive growth.
-                        </p>
+                        <h5 style="font-size:1.0625rem;margin-bottom:.5rem;">Affirmative Action</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Policy compliance for rural/aspirational districts and SC/ST/OBC categories.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-chart-pie fa-3x text-primary"></i>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-3">
+                <div class="card card-glow h-100">
+                    <div class="card-body text-center p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(0,255,136,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                            <i class="fas fa-chart-pie" style="color:var(--green);font-size:1.25rem;"></i>
                         </div>
-                        <h5 class="card-title">Smart Analytics</h5>
-                        <p class="card-text text-muted">
-                            Comprehensive analytics dashboard for administrators to track matching efficiency, 
-                            capacity utilization, and demographic distribution.
-                        </p>
+                        <h5 style="font-size:1.0625rem;margin-bottom:.5rem;">Smart Analytics</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Real-time dashboard tracking matching efficiency and demographic distribution.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-map-marker-alt fa-3x text-primary"></i>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-4">
+                <div class="card card-glow h-100">
+                    <div class="card-body text-center p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(255,170,0,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                            <i class="fas fa-map-marker-alt" style="color:var(--amber);font-size:1.25rem;"></i>
                         </div>
-                        <h5 class="card-title">Location Optimization</h5>
-                        <p class="card-text text-muted">
-                            Considers student location preferences and internship locations to optimize 
-                            placements and reduce geographical barriers.
-                        </p>
+                        <h5 style="font-size:1.0625rem;margin-bottom:.5rem;">Location Optimization</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Geographic preferences considered to reduce barriers and optimize placements.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-history fa-3x text-primary"></i>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-5">
+                <div class="card card-glow h-100">
+                    <div class="card-body text-center p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(255,0,128,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                            <i class="fas fa-history" style="color:var(--pink);font-size:1.25rem;"></i>
                         </div>
-                        <h5 class="card-title">History Tracking</h5>
-                        <p class="card-text text-muted">
-                            Tracks past participation history to ensure fair distribution of opportunities 
-                            and give priority to first-time participants.
-                        </p>
+                        <h5 style="font-size:1.0625rem;margin-bottom:.5rem;">History Tracking</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Fair distribution by tracking past participation and prioritizing first-timers.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-building fa-3x text-primary"></i>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-5">
+                <div class="card card-glow h-100">
+                    <div class="card-body text-center p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(var(--blue-rgb),.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+                            <i class="fas fa-building" style="color:var(--blue);font-size:1.25rem;"></i>
                         </div>
-                        <h5 class="card-title">Capacity Management</h5>
-                        <p class="card-text text-muted">
-                            Intelligent capacity management ensures optimal utilization of available 
-                            internship positions across different sectors and organizations.
-                        </p>
+                        <h5 style="font-size:1.0625rem;margin-bottom:.5rem;">Capacity Management</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Optimal utilization of positions across sectors with intelligent allocation.</p>
                     </div>
                 </div>
             </div>
@@ -134,46 +196,42 @@
 </section>
 
 <!-- Statistics Section -->
-<section class="py-5" style="background-color: var(--bg-card);">
+<section class="py-5" style="background:rgba(var(--blue-rgb),.02);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);padding-top:5rem!important;padding-bottom:5rem!important;">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center mb-5">
-                <h2 class="text-primary">System Impact</h2>
-                <p class="text-muted">Real-time statistics from our intelligent matching system</p>
-            </div>
+        <div class="text-center mb-5">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--blue);font-weight:600;margin-bottom:.75rem;" class="animate-on-scroll">Impact</div>
+            <h2 class="animate-on-scroll delay-1">System <span class="gradient-text-animated">Impact</span></h2>
+            <p class="animate-on-scroll delay-2" style="color:var(--gray-3);">Real-time statistics from our intelligent matching system.</p>
         </div>
         
         <div class="row g-4">
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 animate-on-scroll delay-1">
                 <div class="stat-card">
                     <div class="stat-number" data-tooltip="Total registered students">
                         {{ stats.total_students if stats else '0' }}
                     </div>
-                    <div class="stat-label">Registered Students</div>
+                    <div class="stat-label">Students</div>
                 </div>
             </div>
-            
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 animate-on-scroll delay-2">
                 <div class="stat-card">
-                    <div class="stat-number" data-tooltip="Available internship positions">
-                        {{ stats.total_internships if stats else '8' }}
+                    <div class="stat-number" data-tooltip="Available positions">
+                        {{ stats.total_internships if stats else '30' }}
                     </div>
-                    <div class="stat-label">Internship Opportunities</div>
+                    <div class="stat-label">Opportunities</div>
                 </div>
             </div>
-            
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 animate-on-scroll delay-3">
                 <div class="stat-card">
-                    <div class="stat-number" data-tooltip="Successful matches made">
+                    <div class="stat-number" data-tooltip="Successful matches">
                         {{ stats.total_matches if stats else '0' }}
                     </div>
-                    <div class="stat-label">Successful Matches</div>
+                    <div class="stat-label">Matches</div>
                 </div>
             </div>
-            
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-3 col-sm-6 animate-on-scroll delay-4">
                 <div class="stat-card">
-                    <div class="stat-number" data-tooltip="Average matching accuracy">
+                    <div class="stat-number" data-tooltip="Average match accuracy">
                         {{ "%.1f"|format(stats.match_rate if stats else 0) }}%
                     </div>
                     <div class="stat-label">Match Rate</div>
@@ -183,93 +241,305 @@
     </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="py-5">
+<!-- How It Works -->
+<section class="py-5" style="padding-top:5rem!important;padding-bottom:5rem!important;">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center mb-5">
-                <h2 class="text-primary">How It Works</h2>
-                <p class="text-muted">Simple steps to find your perfect internship match</p>
-            </div>
+        <div class="text-center mb-5">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--violet);font-weight:600;margin-bottom:.75rem;" class="animate-on-scroll">Process</div>
+            <h2 class="animate-on-scroll delay-1">How It <span class="gradient-text-animated">Works</span></h2>
+            <p class="animate-on-scroll delay-2" style="color:var(--gray-3);">Four simple steps to your perfect internship match.</p>
         </div>
         
         <div class="row g-4">
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="mb-3">
-                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px;">
-                            <span class="text-white fw-bold fs-3">1</span>
-                        </div>
+                <div class="text-center animate-on-scroll delay-1">
+                    <div style="width:72px;height:72px;border-radius:20px;background:rgba(var(--blue-rgb),.1);border:1px solid rgba(var(--blue-rgb),.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;position:relative;">
+                        <span style="font-weight:800;font-size:1.5rem;background:var(--grad-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">1</span>
+                        <div style="position:absolute;inset:-4px;border-radius:24px;background:var(--grad-brand);opacity:.15;filter:blur(8px);"></div>
                     </div>
-                    <h5>Create Profile</h5>
-                    <p class="text-muted">
-                        Register and complete your profile with skills, education, preferences, and background information.
-                    </p>
+                    <h5 style="font-size:1rem;">Create Profile</h5>
+                    <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Register with skills, education, and preferences.</p>
                 </div>
             </div>
-            
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="mb-3">
-                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px;">
-                            <span class="text-white fw-bold fs-3">2</span>
-                        </div>
+                <div class="text-center animate-on-scroll delay-2">
+                    <div style="width:72px;height:72px;border-radius:20px;background:rgba(var(--violet-rgb),.1);border:1px solid rgba(var(--violet-rgb),.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;position:relative;">
+                        <span style="font-weight:800;font-size:1.5rem;background:linear-gradient(135deg,var(--violet),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">2</span>
+                        <div style="position:absolute;inset:-4px;border-radius:24px;background:linear-gradient(135deg,var(--violet),var(--blue));opacity:.15;filter:blur(8px);"></div>
                     </div>
-                    <h5>AI Analysis</h5>
-                    <p class="text-muted">
-                        Our AI algorithms analyze your profile against available internship opportunities using multiple criteria.
-                    </p>
+                    <h5 style="font-size:1rem;">AI Analysis</h5>
+                    <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Algorithms analyze your profile against opportunities.</p>
                 </div>
             </div>
-            
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="mb-3">
-                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px;">
-                            <span class="text-white fw-bold fs-3">3</span>
-                        </div>
+                <div class="text-center animate-on-scroll delay-3">
+                    <div style="width:72px;height:72px;border-radius:20px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;position:relative;">
+                        <span style="font-weight:800;font-size:1.5rem;background:linear-gradient(135deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">3</span>
+                        <div style="position:absolute;inset:-4px;border-radius:24px;background:linear-gradient(135deg,var(--green),var(--blue));opacity:.15;filter:blur(8px);"></div>
                     </div>
-                    <h5>Smart Matching</h5>
-                    <p class="text-muted">
-                        Get ranked matches with detailed reasoning and compatibility scores for each opportunity.
-                    </p>
+                    <h5 style="font-size:1rem;">Smart Matching</h5>
+                    <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Ranked results with compatibility scores.</p>
                 </div>
             </div>
-            
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="mb-3">
-                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px;">
-                            <span class="text-white fw-bold fs-3">4</span>
-                        </div>
+                <div class="text-center animate-on-scroll delay-4">
+                    <div style="width:72px;height:72px;border-radius:20px;background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;position:relative;">
+                        <span style="font-weight:800;font-size:1.5rem;background:linear-gradient(135deg,var(--amber),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">4</span>
+                        <div style="position:absolute;inset:-4px;border-radius:24px;background:linear-gradient(135deg,var(--amber),var(--pink));opacity:.15;filter:blur(8px);"></div>
                     </div>
-                    <h5>Apply & Join</h5>
-                    <p class="text-muted">
-                        Review your matches and proceed with applications for your preferred internship opportunities.
-                    </p>
+                    <h5 style="font-size:1rem;">Apply & Join</h5>
+                    <p style="font-size:.875rem;color:var(--gray-3);margin:0;">Review matches and apply for preferred opportunities.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Call to Action -->
-<section class="py-5" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
+<!-- CTA Section -->
+<section class="py-5" style="padding-top:5rem!important;padding-bottom:5rem!important;">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center text-white">
-                <h2 class="mb-3">Ready to Find Your Perfect Internship?</h2>
-                <p class="lead mb-4">
-                    Join thousands of students who have found their ideal government internship opportunities 
-                    through our AI-powered matching system.
+        <div class="card card-glow animate-on-scroll" style="border:none;overflow:visible;">
+            <div style="background:var(--grad-brand);border-radius:var(--radius-xl);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden;">
+                <!-- Decorative blurs -->
+                <div style="position:absolute;top:-50%;left:-20%;width:60%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none;"></div>
+                <div style="position:absolute;bottom:-30%;right:-10%;width:50%;height:160%;background:radial-gradient(circle,rgba(0,0,0,.1) 0%,transparent 70%);pointer-events:none;"></div>
+                
+                <div style="position:relative;z-index:1;">
+                    <h2 style="font-size:clamp(1.5rem,3vw,2.25rem);color:#fff;margin-bottom:1rem;">Ready to Find Your Perfect Opportunity?</h2>
+                    <p style="color:rgba(255,255,255,.8);max-width:500px;margin:0 auto 2rem;font-size:1.0625rem;">
+                        Join thousands of students who found their ideal internship through our AI-powered multi-platform search.
+                    </p>
+                    {% if session.student_id %}
+                        <a href="{{ url_for('student_dashboard') }}" class="btn btn-lg" style="background:#fff;color:var(--bg);font-weight:700;padding:.875rem 2.5rem;border-radius:50px;">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('profile_form') }}" class="btn btn-lg" style="background:#fff;color:var(--bg);font-weight:700;padding:.875rem 2.5rem;border-radius:50px;">
+                            <i class="fas fa-rocket me-2"></i>Start Your Journey
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Platforms Section -->
+<section id="platforms" class="py-5" style="padding-top:5rem!important;padding-bottom:5rem!important;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--green);font-weight:600;margin-bottom:.75rem;" class="animate-on-scroll">Multi-Platform Search</div>
+            <h2 class="animate-on-scroll delay-1">Search Across <span class="gradient-text-animated">All Platforms</span></h2>
+            <p class="animate-on-scroll delay-2" style="max-width:580px;margin:0 auto;color:var(--gray-3);">One search, multiple platforms. We aggregate internships from the best job portals and government sites.</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Indeed -->
+            <div class="col-md-6 col-lg-3 animate-on-scroll delay-1">
+                <div class="card card-glow h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:60px;height:60px;border-radius:16px;background:rgba(33,100,243,.1);border:1px solid rgba(33,100,243,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <span style="font-size:1rem;font-weight:800;color:#2164f3;">In</span>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Indeed</h5>
+                        <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">Millions of job listings worldwide</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LinkedIn -->
+            <div class="col-md-6 col-lg-3 animate-on-scroll delay-2">
+                <div class="card card-glow h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:60px;height:60px;border-radius:16px;background:rgba(10,102,194,.1);border:1px solid rgba(10,102,194,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <span style="font-size:1rem;font-weight:800;color:#0a66c2;">in</span>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">LinkedIn</h5>
+                        <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">Professional networking & jobs</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Naukri -->
+            <div class="col-md-6 col-lg-3 animate-on-scroll delay-3">
+                <div class="card card-glow h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:60px;height:60px;border-radius:16px;background:rgba(240,110,56,.1);border:1px solid rgba(240,110,56,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <span style="font-size:1rem;font-weight:800;color:#f06e38;">N</span>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Naukri</h5>
+                        <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">India's #1 job portal</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Internshala -->
+            <div class="col-md-6 col-lg-3 animate-on-scroll delay-4">
+                <div class="card card-glow h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:60px;height:60px;border-radius:16px;background:rgba(0,168,95,.1);border:1px solid rgba(0,168,95,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <span style="font-size:1rem;font-weight:800;color:#00a85f;">Is</span>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Internshala</h5>
+                        <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">Top internship platform</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Government Portals -->
+        <div class="row g-4 mt-3">
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-2">
+                <div class="card card-glow h-100">
+                    <div class="card-body d-flex align-items-start gap-3 p-4">
+                        <div style="width:48px;height:48px;border-radius:14px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-university" style="color:var(--blue);"></i>
+                        </div>
+                        <div>
+                            <h5 style="font-size:1rem;margin-bottom:.375rem;">Government Portals</h5>
+                            <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">PM Internship Scheme, NIC, DRDO, ISRO & more</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-3">
+                <div class="card card-glow h-100">
+                    <div class="card-body d-flex align-items-start gap-3 p-4">
+                        <div style="width:48px;height:48px;border-radius:14px;background:rgba(0,255,136,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-robot" style="color:var(--green);"></i>
+                        </div>
+                        <div>
+                            <h5 style="font-size:1rem;margin-bottom:.375rem;">AI Smart Matching</h5>
+                            <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">Skills-based matching across all platforms</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 animate-on-scroll delay-4">
+                <div class="card card-glow h-100">
+                    <div class="card-body d-flex align-items-start gap-3 p-4">
+                        <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,170,0,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-bolt" style="color:var(--amber);"></i>
+                        </div>
+                        <div>
+                            <h5 style="font-size:1rem;margin-bottom:.375rem;">Real-Time Results</h5>
+                            <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">Latest openings fetched every time you search</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-5" style="background:rgba(var(--blue-rgb),.03);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);padding-top:5rem!important;padding-bottom:5rem!important;">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--blue);font-weight:600;margin-bottom:.75rem;" class="animate-on-scroll">About Prayaas</div>
+                <h2 class="animate-on-scroll delay-1" style="font-size:clamp(1.5rem,3vw,2rem);">Empowering Students with <span class="gradient-text-animated">Smart Career Matching</span></h2>
+                <p class="animate-on-scroll delay-2" style="color:var(--gray-3);line-height:1.8;">
+                    Prayaas is an AI-powered internship and job matching platform designed for Indian students. 
+                    We aggregate opportunities from multiple platforms — Indeed, LinkedIn, Naukri, Internshala, 
+                    and government portals — and use intelligent algorithms to match you with the best opportunities 
+                    based on your skills, education, and preferences.
                 </p>
-                <a href="{{ url_for('profile_form') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-rocket me-2"></i>Start Your Journey
-                </a>
+                <div class="animate-on-scroll delay-3">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div style="width:40px;height:40px;border-radius:12px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-check" style="color:var(--blue);"></i>
+                        </div>
+                        <span style="color:var(--gray-2);font-size:.9375rem;">Search across 5+ platforms in one click</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div style="width:40px;height:40px;border-radius:12px;background:rgba(0,255,136,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-check" style="color:var(--green);"></i>
+                        </div>
+                        <span style="color:var(--gray-2);font-size:.9375rem;">AI-powered resume analysis & matching</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,170,0,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-check" style="color:var(--amber);"></i>
+                        </div>
+                        <span style="color:var(--gray-2);font-size:.9375rem;">Government & private sector opportunities</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 animate-on-scroll delay-2">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="stat-card" style="text-align:center;">
+                            <div class="stat-number" style="font-size:2rem;">5+</div>
+                            <div class="stat-label">Platforms</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card" style="text-align:center;">
+                            <div class="stat-number" style="font-size:2rem;">10K+</div>
+                            <div class="stat-label">Opportunities</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card" style="text-align:center;">
+                            <div class="stat-number" style="font-size:2rem;">AI</div>
+                            <div class="stat-label">Smart Match</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card" style="text-align:center;">
+                            <div class="stat-number" style="font-size:2rem;">Free</div>
+                            <div class="stat-label">For Students</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5" style="padding-top:5rem!important;padding-bottom:5rem!important;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--violet);font-weight:600;margin-bottom:.75rem;" class="animate-on-scroll">Get In Touch</div>
+            <h2 class="animate-on-scroll delay-1">Contact <span class="gradient-text-animated">Us</span></h2>
+            <p class="animate-on-scroll delay-2" style="max-width:480px;margin:0 auto;color:var(--gray-3);">Have questions? We're here to help you find the best opportunities.</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4 animate-on-scroll delay-1">
+                <div class="card h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <i class="fas fa-map-marker-alt" style="color:var(--blue);font-size:1.25rem;"></i>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Visit Us</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">New Delhi, India</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 animate-on-scroll delay-2">
+                <div class="card h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(0,255,136,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <i class="fas fa-envelope" style="color:var(--green);font-size:1.25rem;"></i>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Email Us</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">support@prayaas.gov.in</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 animate-on-scroll delay-3">
+                <div class="card h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(255,170,0,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <i class="fas fa-phone" style="color:var(--amber);font-size:1.25rem;"></i>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Call Us</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin:0;">1800-11-XXXX (Toll Free)</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

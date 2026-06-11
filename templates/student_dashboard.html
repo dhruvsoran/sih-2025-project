@@ -1,116 +1,100 @@
 {% extends "base.html" %}
 
-{% block title %}Student Dashboard - PM Internship Matching System{% endblock %}
+{% block title %}Student Dashboard — Prayaas{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container py-5">
     {% if student %}
-        <!-- Student Profile Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h2 class="text-primary mb-2">
-                                    <i class="fas fa-user-graduate me-2"></i>
-                                    Welcome back, {{ student.name }}!
-                                </h2>
-                                <p class="text-muted mb-1">
-                                    <i class="fas fa-envelope me-2"></i>{{ student.email }}
-                                </p>
-                                <p class="text-muted mb-1">
-                                    <i class="fas fa-graduation-cap me-2"></i>{{ student.education }} from {{ student.college }}
-                                </p>
-                                <p class="text-muted mb-0">
-                                    <i class="fas fa-chart-line me-2"></i>CGPA: {{ student.cgpa }}/10.0
-                                </p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <div class="d-flex gap-2 justify-content-end">
-                                    <button type="button" class="btn btn-primary btn-lg" 
-                                            id="run-matching-btn" data-student-id="{{ student.id }}">
-                                        <i class="fas fa-magic me-2"></i>Find My Matches
-                                    </button>
-                                    <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary btn-lg">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                    </a>
-                                </div>
-                            </div>
+        <!-- Welcome Header -->
+        <div class="card card-glow mb-4">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-7 mb-3 mb-md-0">
+                        <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);font-weight:600;margin-bottom:.5rem;">Dashboard</div>
+                        <h2 style="font-size:1.5rem;margin-bottom:.5rem;">Welcome back, {{ student.name }}</h2>
+                        <div class="d-flex flex-wrap gap-3" style="font-size:.875rem;color:var(--gray-3);">
+                            <span><i class="fas fa-envelope me-1" style="font-size:.75rem;"></i>{{ student.email }}</span>
+                            <span><i class="fas fa-graduation-cap me-1" style="font-size:.75rem;"></i>{{ student.education }} · {{ student.college }}</span>
+                            <span><i class="fas fa-chart-line me-1" style="font-size:.75rem;"></i>CGPA: {{ student.cgpa }}/10</span>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-md-end">
+                        <div class="d-flex gap-2 justify-content-md-end flex-wrap">
+                            <a href="{{ url_for('upload_resume') }}" class="btn btn-primary btn-glow">
+                                <i class="fas fa-file-upload me-1"></i>Upload Resume
+                            </a>
+                            <a href="{{ url_for('live_match', student_id=student.id) }}" class="btn btn-secondary">
+                                <i class="fas fa-globe me-1"></i>Search All Platforms
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Profile Details -->
-        <div class="row mb-4">
+        <div class="row g-4">
+            <!-- Profile Info -->
             <div class="col-lg-6">
                 <div class="card h-100">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-user-cog me-2"></i>Profile Information
-                        </h5>
+                    <div class="card-header" style="display:flex;align-items:center;gap:.5rem;">
+                        <i class="fas fa-user-cog" style="color:var(--blue);font-size:.875rem;"></i>
+                        <span style="font-size:.9375rem;">Profile Information</span>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Age:</strong></div>
-                            <div class="col-sm-8">{{ student.age }} years</div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--glass-border);">
+                            <span style="color:var(--gray-3);font-size:.875rem;">Age</span>
+                            <span style="font-size:.875rem;">{{ student.age }} years</span>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Category:</strong></div>
-                            <div class="col-sm-8">
-                                <span class="badge bg-secondary">{{ student.category }}</span>
-                            </div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--glass-border);">
+                            <span style="color:var(--gray-3);font-size:.875rem;">Category</span>
+                            <span class="badge bg-secondary">{{ student.category }}</span>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Location Type:</strong></div>
-                            <div class="col-sm-8">
-                                <span class="badge {{ 'bg-warning' if student.location_type == 'rural' else 'bg-info' }}">
-                                    {{ student.location_type.title() }}
-                                </span>
-                            </div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--glass-border);">
+                            <span style="color:var(--gray-3);font-size:.875rem;">Location Type</span>
+                            <span class="badge {{ 'bg-warning' if student.location_type == 'rural' else 'bg-info' }}">
+                                {{ student.location_type.title() }}
+                            </span>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Experience:</strong></div>
-                            <div class="col-sm-8">{{ student.experience }}</div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--glass-border);">
+                            <span style="color:var(--gray-3);font-size:.875rem;">Experience</span>
+                            <span style="font-size:.875rem;">{{ student.experience }}</span>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-4"><strong>Past Participation:</strong></div>
-                            <div class="col-sm-8">
-                                <span class="badge {{ 'bg-warning' if student.past_participation else 'bg-success' }}">
-                                    {{ 'Yes' if student.past_participation else 'No' }}
-                                </span>
-                            </div>
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--glass-border);">
+                            <span style="color:var(--gray-3);font-size:.875rem;">Past Participation</span>
+                            <span class="badge {{ 'bg-warning' if student.past_participation else 'bg-success' }}">
+                                {{ 'Yes' if student.past_participation else 'No' }}
+                            </span>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-4"><strong>Location Preference:</strong></div>
-                            <div class="col-sm-8">{{ student.location_preference }}</div>
+                        <div class="d-flex justify-content-between py-2">
+                            <span style="color:var(--gray-3);font-size:.875rem;">Preferred Location</span>
+                            <span style="font-size:.875rem;">{{ student.location_preference }}</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-6">
+            <!-- Skills & Interests -->
+            <div class="col-lg-6 delay-2">
                 <div class="card h-100">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-cogs me-2"></i>Skills & Interests
-                        </h5>
+                    <div class="card-header" style="display:flex;align-items:center;gap:.5rem;">
+                        <i class="fas fa-cogs" style="color:var(--violet);font-size:.875rem;"></i>
+                        <span style="font-size:.9375rem;">Skills & Interests</span>
                     </div>
                     <div class="card-body">
-                        <div class="mb-4">
-                            <h6 class="text-secondary mb-2">Technical Skills</h6>
-                            <div>
+                        <div class="mb-3">
+                            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray-4);font-weight:600;margin-bottom:.75rem;">Technical Skills</div>
+                            <div class="d-flex flex-wrap gap-1">
                                 {% for skill in student.skills %}
                                     <span class="skill-tag">{{ skill }}</span>
                                 {% endfor %}
                             </div>
                         </div>
-                        
                         <div>
-                            <h6 class="text-secondary mb-2">Areas of Interest</h6>
-                            <div>
+                            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray-4);font-weight:600;margin-bottom:.75rem;">Areas of Interest</div>
+                            <div class="d-flex flex-wrap gap-1">
                                 {% for interest in student.interests %}
                                     <span class="skill-tag secondary">{{ interest }}</span>
                                 {% endfor %}
@@ -122,47 +106,45 @@
         </div>
 
         <!-- Action Cards -->
-        <div class="row">
+        <div class="row g-4 mt-2">
             <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-search fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">Discover Matches</h5>
-                        <p class="card-text text-muted">
-                            Use our AI-powered matching system to find internships that perfectly align with your profile.
-                        </p>
-                        <a href="{{ url_for('run_matching', student_id=student.id) }}" class="btn btn-primary">
-                            <i class="fas fa-rocket me-2"></i>Run Matching
+                <div class="card h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <i class="fas fa-file-upload" style="color:var(--blue);font-size:1.25rem;"></i>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Upload Resume</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin-bottom:1rem;">Get AI-powered job recommendations based on your resume.</p>
+                        <a href="{{ url_for('upload_resume') }}" class="btn btn-primary btn-sm btn-glow">
+                            <i class="fas fa-magic me-1"></i>Upload & Analyze
                         </a>
                     </div>
                 </div>
             </div>
-            
             <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-edit fa-3x text-secondary mb-3"></i>
-                        <h5 class="card-title">Update Profile</h5>
-                        <p class="card-text text-muted">
-                            Keep your profile up-to-date to get better matches and improve your visibility.
-                        </p>
-                        <a href="{{ url_for('profile_form') }}" class="btn btn-secondary">
-                            <i class="fas fa-user-edit me-2"></i>Edit Profile
+                <div class="card h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(var(--violet-rgb),.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <i class="fas fa-globe" style="color:var(--violet);font-size:1.25rem;"></i>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Multi-Platform Search</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin-bottom:1rem;">Search across Indeed, LinkedIn, Naukri & Internshala.</p>
+                        <a href="{{ url_for('live_match', student_id=student.id) }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-rocket me-1"></i>Search All Platforms
                         </a>
                     </div>
                 </div>
             </div>
-            
             <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-history fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">View Match History</h5>
-                        <p class="card-text text-muted">
-                            Review your previous matching results and track your internship applications.
-                        </p>
-                        <a href="{{ url_for('run_matching', student_id=student.id) }}" class="btn btn-success">
-                            <i class="fas fa-history me-2"></i>View History
+                <div class="card h-100" style="text-align:center;">
+                    <div class="card-body p-4">
+                        <div style="width:56px;height:56px;border-radius:16px;background:rgba(0,255,136,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                            <i class="fas fa-university" style="color:var(--green);font-size:1.25rem;"></i>
+                        </div>
+                        <h5 style="font-size:1rem;margin-bottom:.5rem;">Government Internships</h5>
+                        <p style="font-size:.875rem;color:var(--gray-3);margin-bottom:1rem;">AI-matched PM Scheme & government opportunities.</p>
+                        <a href="{{ url_for('run_matching', student_id=student.id) }}" class="btn btn-sm" style="background:rgba(0,255,136,.12);color:var(--green);border:1px solid rgba(0,255,136,.2);">
+                            <i class="fas fa-magic me-1"></i>Run Matching
                         </a>
                     </div>
                 </div>
@@ -170,30 +152,30 @@
         </div>
 
     {% else %}
-        <!-- No Profile State -->
+        <!-- No Profile -->
         <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card text-center">
-                    <div class="card-body py-5">
-                        <i class="fas fa-user-plus fa-4x text-primary mb-4"></i>
-                        <h2 class="text-primary mb-3">Create Your Student Profile</h2>
-                        <p class="lead text-muted mb-4">
-                            Welcome to the PM Internship Matching System! To get started, you need to create 
-                            your student profile with your skills, education, and preferences.
+            <div class="col-lg-7">
+                <div class="card card-glow ">
+                    <div class="card-body text-center p-5">
+                        <div style="width:80px;height:80px;border-radius:22px;background:rgba(var(--blue-rgb),.1);border:1px solid rgba(var(--blue-rgb),.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                            <i class="fas fa-user-plus" style="color:var(--blue);font-size:2rem;"></i>
+                        </div>
+                        <h2 style="font-size:1.5rem;margin-bottom:.75rem;">Create Your Profile</h2>
+                        <p style="color:var(--gray-3);max-width:420px;margin:0 auto 1.5rem;">
+                            Welcome! Create your student profile to get matched with the best internship opportunities.
                         </p>
-                        <div class="row justify-content-center mb-4">
-                            <div class="col-md-8">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <strong>What you'll need:</strong><br>
-                                    • Educational background and CGPA<br>
-                                    • Technical skills and interests<br>
-                                    • Location and category preferences<br>
-                                    • Previous internship experience
+                        <div class="card mb-4" style="text-align:left;border-radius:var(--radius);">
+                            <div class="card-body p-3">
+                                <div style="font-size:.8125rem;color:var(--gray-3);margin-bottom:.5rem;"><strong style="color:var(--blue);">What you'll need:</strong></div>
+                                <div style="font-size:.8125rem;color:var(--gray-4);">
+                                    <div class="mb-1"><i class="fas fa-check me-2" style="color:var(--green);font-size:.6875rem;"></i>Educational background and CGPA</div>
+                                    <div class="mb-1"><i class="fas fa-check me-2" style="color:var(--green);font-size:.6875rem;"></i>Technical skills and interests</div>
+                                    <div class="mb-1"><i class="fas fa-check me-2" style="color:var(--green);font-size:.6875rem;"></i>Location and category preferences</div>
+                                    <div><i class="fas fa-check me-2" style="color:var(--green);font-size:.6875rem;"></i>Previous internship experience</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ url_for('profile_form') }}" class="btn btn-primary btn-lg">
+                        <a href="{{ url_for('profile_form') }}" class="btn btn-primary btn-lg btn-glow">
                             <i class="fas fa-plus-circle me-2"></i>Create My Profile
                         </a>
                     </div>
@@ -202,13 +184,4 @@
         </div>
     {% endif %}
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add any student dashboard specific JavaScript here
-    console.log('Student Dashboard loaded');
-});
-</script>
 {% endblock %}

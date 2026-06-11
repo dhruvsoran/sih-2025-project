@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}404 — Page Not Found | Prayaas{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center" style="min-height:70vh;padding:3rem 0;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <div style="width:100px;height:100px;border-radius:28px;background:rgba(var(--blue-rgb),.1);border:1px solid rgba(var(--blue-rgb),.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                    <span style="font-size:3rem;font-weight:900;background:var(--grad-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">404</span>
+                </div>
+                <h2 style="font-size:1.75rem;margin-bottom:.75rem;">Page Not Found</h2>
+                <p style="color:var(--gray-3);max-width:400px;margin:0 auto 2rem;font-size:1rem;">
+                    The page you're looking for doesn't exist or has been moved.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-glow">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    <a href="{{ url_for('student_login') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

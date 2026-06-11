@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Live Internship Matches — Prayaas{% endblock %}
+
+{% block content %}
+<section class="py-4" style="margin-top:1rem;">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <div>
+                <h4 style="font-size:1.25rem;font-weight:700;margin-bottom:.25rem;color:var(--white);">
+                    <i class="fas fa-globe me-2" style="color:var(--blue);"></i>Live Internship Matches
+                </h4>
+                <p style="font-size:.8125rem;color:var(--gray-3);margin:0;">
+                    Real-time results from
+                    {% for p in platforms_found %}
+                        <span class="badge" style="background:rgba(var(--blue-rgb),.15);color:var(--blue);font-size:.6875rem;padding:.2rem .5rem;margin-left:.25rem;">{{ p|capitalize }}</span>
+                    {% endfor %}
+                    — {{ matches|length }} matches from {{ total_fetched }} internships scanned
+                </p>
+            </div>
+            <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary" style="font-size:.8125rem;padding:.5rem 1rem;">
+                <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Search Info -->
+        {% if search_query %}
+        <div style="background:rgba(var(--blue-rgb),.06);border:1px solid rgba(var(--blue-rgb),.15);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;">
+            <i class="fas fa-search" style="color:var(--blue);font-size:.875rem;"></i>
+            <div>
+                <span style="font-size:.8125rem;color:var(--gray-2);">Search: </span>
+                <span style="font-size:.8125rem;color:var(--white);font-weight:600;">{{ search_query }}</span>
+                {% if location %}
+                <span style="font-size:.8125rem;color:var(--gray-4);margin-left:.5rem;">in {{ location }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Profile Summary Bar -->
+        <div style="background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1.5rem;">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width:36px;height:36px;border-radius:10px;background:var(--grad-brand);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fas fa-user" style="color:var(--bg);font-size:.75rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size:.8125rem;font-weight:600;color:var(--white);">{{ student.name }}</div>
+                        <div style="font-size:.6875rem;color:var(--gray-4);">{{ student.education }} · {{ student.college }}</div>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-1" style="margin-left:auto;">
+                    {% for skill in student.skills[:5] %}
+                    <span class="skill-tag" style="font-size:.6875rem;padding:.2rem .5rem;">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% if matches %}
+        <!-- Results -->
+        <div class="row g-3">
+            {% for match in matches %}
+            <div class="col-12">
+                <div class="card card-glow" style="border:1px solid var(--glass-border);overflow:visible;">
+                    <div class="card-body" style="padding:1.25rem;">
+                        <div class="d-flex gap-3 align-items-start">
+                            <!-- Platform Logo -->
+                            <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--glass-border);">
+                                {% if match.internship.platform == 'indeed' %}
+                                    <span style="font-size:.625rem;font-weight:700;color:#2164f3;">Indeed</span>
+                                {% elif match.internship.platform == 'linkedin' %}
+                                    <span style="font-size:.625rem;font-weight:700;color:#0a66c2;">LinkedIn</span>
+                                {% elif match.internship.platform == 'naukri' %}
+                                    <span style="font-size:.625rem;font-weight:700;color:#f06e38;">Naukri</span>
+                                {% else %}
+                                    <i class="fas fa-briefcase" style="color:var(--gray-4);font-size:.875rem;"></i>
+                                {% endif %}
+                            </div>
+
+                            <!-- Details -->
+                            <div style="flex:1;min-width:0;">
+                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                    <div>
+                                        <h5 style="font-size:1rem;font-weight:700;color:var(--white);margin-bottom:.25rem;">
+                                            {{ match.internship.title }}
+                                        </h5>
+                                        <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size:.8125rem;color:var(--gray-3);">
+                                            <span><i class="fas fa-building me-1" style="font-size:.6875rem;"></i>{{ match.internship.company }}</span>
+                                            <span style="color:var(--gray-5);">·</span>
+                                            <span><i class="fas fa-map-marker-alt me-1" style="font-size:.6875rem;"></i>{{ match.internship.location }}</span>
+                                        </div>
+                                    </div>
+                                    <!-- Score -->
+                                    <div style="text-align:right;">
+                                        <div style="font-size:1.75rem;font-weight:800;line-height:1;
+                                            {% if match.score >= 70 %}color:var(--green);
+                                            {% elif match.score >= 45 %}color:var(--blue);
+                                            {% else %}color:var(--amber);{% endif %}">
+                                            {{ match.score }}%
+                                        </div>
+                                        <div style="font-size:.625rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">Match</div>
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                {% if match.internship.description %}
+                                <p style="font-size:.8125rem;color:var(--gray-3);margin:.75rem 0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                                    {{ match.internship.description[:200] }}
+                                </p>
+                                {% endif %}
+
+                                <!-- Skills Found -->
+                                {% if match.internship.skills_extracted %}
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    {% for skill in match.internship.skills_extracted[:6] %}
+                                    <span class="skill-tag {% if skill.lower() in student.skills|map('lower')|list %}matched{% endif %}"
+                                          style="font-size:.6875rem;padding:.2rem .5rem;">
+                                        {{ skill }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <!-- Reasoning -->
+                                {% if match.reasoning %}
+                                <div style="margin-top:.5rem;">
+                                    {% for reason in match.reasoning[:3] %}
+                                    <span style="font-size:.6875rem;color:var(--gray-4);display:inline-block;margin-right:.75rem;">
+                                        <i class="fas fa-check-circle me-1" style="color:var(--green);font-size:.5rem;"></i>{{ reason }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <!-- Stipend + Posted -->
+                                <div class="d-flex align-items-center gap-3 mt-2" style="font-size:.75rem;color:var(--gray-4);">
+                                    {% if match.internship.stipend and match.internship.stipend != 'Not specified' and match.internship.stipend != 'Check listing' %}
+                                    <span><i class="fas fa-wallet me-1"></i>{{ match.internship.stipend }}</span>
+                                    {% endif %}
+                                    <span><i class="fas fa-clock me-1"></i>{{ match.internship.posted }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Apply Button -->
+                            <div style="flex-shrink:0;">
+                                <a href="{{ match.internship.apply_url }}" target="_blank" rel="noopener noreferrer"
+                                   class="btn"
+                                   style="background:var(--grad-brand);color:var(--white);font-weight:700;font-size:.8125rem;padding:.625rem 1.5rem;border-radius:50px;text-decoration:none;white-space:nowrap;box-shadow:0 2px 12px rgba(var(--blue-rgb),.3);">
+                                    <i class="fas fa-external-link-alt me-1"></i>Apply Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Source Notice -->
+        <div style="text-align:center;margin-top:2rem;padding:1rem;background:rgba(var(--blue-rgb),.04);border-radius:var(--radius);border:1px solid var(--glass-border);">
+            <p style="font-size:.75rem;color:var(--gray-4);margin:0;">
+                <i class="fas fa-info-circle me-1"></i>
+                Listings sourced from Indeed, LinkedIn, and Naukri.com in real-time.
+                Click <strong>"Apply Now"</strong> to go directly to the original posting on the source platform.
+            </p>
+        </div>
+
+        {% else %}
+        <!-- No Results -->
+        <div class="text-center py-5">
+            <div style="width:80px;height:80px;border-radius:20px;background:rgba(var(--blue-rgb),.08);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                <i class="fas fa-search" style="color:var(--blue);font-size:2rem;"></i>
+            </div>
+            <h5 style="color:var(--white);margin-bottom:.5rem;">No Live Matches Found</h5>
+            <p style="font-size:.875rem;color:var(--gray-3);max-width:400px;margin:0 auto 1.5rem;">
+                We couldn't find matching internships right now. Try broadening your search or updating your skills.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ url_for('live_match', student_id=student.id, location='') }}" class="btn btn-primary" style="font-size:.8125rem;">
+                    <i class="fas fa-sync me-1"></i>Retry Search
+                </a>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary" style="font-size:.8125rem;">
+                    <i class="fas fa-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

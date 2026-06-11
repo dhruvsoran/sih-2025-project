@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/login
+Disallow: /admin/signup
+Disallow: /admin/internships
+Disallow: /api/
+Disallow: /logout
+
+Sitemap: https://prayaas.gov.in/sitemap.xml

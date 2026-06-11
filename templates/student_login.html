@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Login — Prayaas{% endblock %}
+{% block title %}Student Login — Prayaas{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center justify-content-center" style="min-height:70vh;padding:3rem 0;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-5 col-lg-4">
-                <div style="position:absolute;top:50%;left:50%;width:300px;height:300px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(var(--violet-rgb),.1) 0%,transparent 70%);pointer-events:none;border-radius:50%;filter:blur(50px);"></div>
+                <!-- Glow -->
+                <div style="position:absolute;top:50%;left:50%;width:300px;height:300px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(var(--blue-rgb),.1) 0%,transparent 70%);pointer-events:none;border-radius:50%;filter:blur(50px);"></div>
                 
                 <div class="card card-glow " style="position:relative;">
                     <div class="card-body p-4">
                         <div class="text-center mb-4">
-                            <div style="width:64px;height:64px;border-radius:18px;background:rgba(var(--violet-rgb),.1);border:1px solid rgba(var(--violet-rgb),.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                                <i class="fas fa-shield-alt" style="color:var(--violet);font-size:1.5rem;"></i>
+                            <div style="width:64px;height:64px;border-radius:18px;background:rgba(var(--blue-rgb),.1);border:1px solid rgba(var(--blue-rgb),.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                                <i class="fas fa-user-graduate" style="color:var(--blue);font-size:1.5rem;"></i>
                             </div>
-                            <h3 style="font-size:1.375rem;margin-bottom:.25rem;">Admin Access</h3>
-                            <p style="color:var(--gray-3);font-size:.875rem;margin:0;">Authorized personnel only</p>
+                            <h3 style="font-size:1.375rem;margin-bottom:.25rem;">Welcome Back</h3>
+                            <p style="color:var(--gray-3);font-size:.875rem;margin:0;">Sign in to access your matches</p>
                         </div>
                         
                         <form method="POST">
@@ -25,7 +26,7 @@
                                     <i class="fas fa-envelope me-1" style="font-size:.75rem;"></i>Email
                                 </label>
                                 <input type="email" class="form-control" id="email" name="email" 
-                                       placeholder="admin@example.com" required>
+                                       placeholder="you@example.com" required>
                             </div>
                             
                             <div class="mb-4">
@@ -36,11 +37,17 @@
                                        placeholder="••••••••" required>
                             </div>
                             
-                            <button type="submit" class="btn w-100 btn-glow" 
-                                    style="background:var(--grad-brand);color:#fff;">
-                                <i class="fas fa-sign-in-alt me-2"></i>Access Dashboard
+                            <button type="submit" class="btn btn-primary w-100 btn-glow">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
                             </button>
                         </form>
+                        
+                        <div class="text-center mt-4" style="padding-top:1rem;border-top:1px solid var(--glass-border);">
+                            <p style="color:var(--gray-4);font-size:.8125rem;margin-bottom:.75rem;">Don't have an account?</p>
+                            <a href="{{ url_for('profile_form') }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-user-plus me-2"></i>Create Profile
+                            </a>
+                        </div>
                         
                         <div class="text-center mt-3">
                             <a href="{{ url_for('index') }}" style="color:var(--gray-4);font-size:.8125rem;">

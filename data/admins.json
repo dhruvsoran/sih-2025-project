@@ -3,7 +3,7 @@
     "id": "8a88e5bb-0f5b-4532-b02b-8332ebfb71ae",
     "name": "Dhruv Soran",
     "email": "dhruv20062052@gmail.com",
-    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "password": "scrypt:32768:8:1$DsAa04Ax1RudTrSy$3e04ff0b80464dd5c045aab4bd3183c731c04e64a79a8e03240ef550ea2cffbdd0cf56c1b903130191c612ed206510f812584f711ccc1d34a49c28a050db847e",
     "created_at": "2025-09-24T15:52:41.965474"
   }
 ]

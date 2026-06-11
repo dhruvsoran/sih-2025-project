@@ -15,6 +15,13 @@ class MatchingEngine:
             'affirmative_action': 0.05,
             'past_participation': 0.05
         }
+        
+        self.weights_live = {
+            'skills_match': 0.35,
+            'interest_alignment': 0.25,
+            'location_preference': 0.20,
+            'description_relevance': 0.20,
+        }
     
     def find_matches(self, student: Dict[str, Any], internships: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Find and rank internship matches for a student"""
@@ -37,6 +44,27 @@ class MatchingEngine:
             match['rank'] = i + 1
         
         return matches[:10]  # Return top 10 matches
+    
+    def find_live_matches(self, student: Dict[str, Any], live_internships: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Find and rank live internship matches scraped from Indeed/LinkedIn/Naukri."""
+        matches = []
+        
+        for internship in live_internships:
+            score = self.calculate_live_match_score(student, internship)
+            if score < 15:
+                continue
+            matches.append({
+                'internship': internship,
+                'score': round(score, 1),
+                'rank': None,
+                'reasoning': self.generate_live_reasoning(student, internship, score),
+            })
+        
+        matches.sort(key=lambda x: x['score'], reverse=True)
+        for i, m in enumerate(matches):
+            m['rank'] = i + 1
+        
+        return matches[:20]
     
     def calculate_match_score(self, student: Dict[str, Any], internship: Dict[str, Any]) -> float:
         """Calculate matching score between student and internship"""
@@ -195,3 +223,68 @@ class MatchingEngine:
             reasons.append("Social category consideration")
         
         return reasons[:5]  # Limit to top 5 reasons
+
+    def calculate_live_match_score(self, student: Dict[str, Any], internship: Dict[str, Any]) -> float:
+        """Calculate match score for a live (scraped) internship against student profile."""
+        student_skills = set(s.lower() for s in student.get('skills', []))
+        internship_skills = set(s.lower() for s in internship.get('skills_extracted', []))
+
+        if internship_skills:
+            skills_overlap = len(student_skills & internship_skills)
+            skills_score = min(skills_overlap / max(len(internship_skills), 1), 1.0)
+        else:
+            skills_score = 0.5
+
+        student_interests = set(i.lower() for i in student.get('interests', []))
+        text = (internship.get('title', '') + ' ' + internship.get('company', '') + ' ' + internship.get('description', '')).lower()
+        interest_matches = sum(1 for i in student_interests if i in text)
+        interest_score = min(interest_matches / max(len(student_interests), 1), 1.0) if student_interests else 0.5
+
+        location_pref = student.get('location_preference', '').lower()
+        loc = internship.get('location', '').lower()
+        if location_pref == 'any' or not location_pref:
+            location_score = 0.7
+        elif location_pref in loc or any(city in loc for city in location_pref.split(',')):
+            location_score = 1.0
+        else:
+            location_score = 0.3
+
+        desc_length = len(internship.get('description', ''))
+        desc_score = min(desc_length / 100, 1.0)
+
+        total = (
+            skills_score * self.weights_live['skills_match'] +
+            interest_score * self.weights_live['interest_alignment'] +
+            location_score * self.weights_live['location_preference'] +
+            desc_score * self.weights_live['description_relevance']
+        ) * 100
+
+        return max(0, min(100, total))
+
+    def generate_live_reasoning(self, student: Dict[str, Any], internship: Dict[str, Any], score: float) -> List[str]:
+        """Generate reasoning for live internship matches."""
+        reasons = []
+        student_skills = set(s.lower() for s in student.get('skills', []))
+        internship_skills = set(s.lower() for s in internship.get('skills_extracted', []))
+
+        matched = student_skills & internship_skills
+        if matched:
+            reasons.append(f"Skills match: {', '.join(list(matched)[:4])}")
+
+        student_interests = set(i.lower() for i in student.get('interests', []))
+        text = (internship.get('title', '') + ' ' + internship.get('description', '')).lower()
+        interest_hits = [i for i in student_interests if i in text]
+        if interest_hits:
+            reasons.append(f"Matches interests: {', '.join(list(interest_hits)[:3])}")
+
+        location_pref = student.get('location_preference', '').lower()
+        loc = internship.get('location', '').lower()
+        if location_pref and location_pref in loc:
+            reasons.append("Location matches your preference")
+
+        if score >= 70:
+            reasons.append("Strong match — highly recommended")
+        elif score >= 45:
+            reasons.append("Good match for your profile")
+
+        return reasons[:5]

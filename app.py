@@ -3,20 +3,23 @@ import logging
 from flask import Flask
 from flask_session import Session
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
+# Configure logging - use INFO in production, DEBUG only when debugging
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", "smart-india-hackathon-2025-secret-key")
+app.secret_key = os.environ.get("SESSION_SECRET") or os.urandom(32)
 
-# Configure session
+# Production session config
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_PERMANENT'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
+
 Session(app)
 
 # Import routes after app creation
-from routes import *
+import routes  # noqa: F401
 
-# Comment out direct run - using gunicorn via workflows
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5000, debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=False)
