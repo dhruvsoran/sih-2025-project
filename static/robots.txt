@@ -22,4 +22,4 @@ Disallow: /
 User-agent: Google-Extended
 Disallow: /
 
-Sitemap: https://www.prayaas.tech/sitemap.xml
+Sitemap: https://sih-2025-project-2.onrender.com/sitemap.xml

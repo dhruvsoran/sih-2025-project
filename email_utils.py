@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 # Resend API configuration
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
 MAIL_FROM = os.environ.get('MAIL_FROM', 'Prayaas <onboarding@resend.dev>')
-BASE_URL = os.environ.get('BASE_URL', 'https://www.prayaas.tech')
+BASE_URL = os.environ.get('BASE_URL', 'https://sih-2025-project-2.onrender.com')
 
 
 def generate_verification_token():
