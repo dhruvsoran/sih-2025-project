@@ -251,6 +251,7 @@ def live_match(student_id):
     location = request.args.get('location', student.get('location_preference', ''))
     search_query = request.args.get('query', '')
     
+    # Fetch live internships from external platforms
     fetcher = InternshipFetcher()
     live_internships = fetcher.fetch_all(
         query=search_query,
@@ -259,17 +260,32 @@ def live_match(student_id):
         max_per_platform=12
     )
     
-    matches = matching_engine.find_live_matches(student, live_internships)
+    live_matches = matching_engine.find_live_matches(student, live_internships)
     
-    platforms_found = list(set(m['internship'].get('platform', '') for m in matches))
+    # Also include internal database matches
+    internal_internships = data_manager.get_all_internships()
+    internal_matches = matching_engine.find_matches(student, internal_internships)
+    
+    # Convert internal matches to same format as live matches
+    for m in internal_matches:
+        m['internship']['platform'] = 'Prayaas Database'
+        m['source'] = 'internal'
+    
+    for m in live_matches:
+        m['source'] = 'live'
+    
+    # Combine: internal first, then live
+    all_matches = internal_matches + live_matches
+    
+    platforms_found = list(set(m['internship'].get('platform', '') for m in all_matches))
     
     return render_template('live_matching_results.html',
                          student=student,
-                         matches=matches,
+                         matches=all_matches,
                          search_query=search_query,
                          location=location,
                          platforms_found=platforms_found,
-                         total_fetched=len(live_internships))
+                         total_fetched=len(live_internships) + len(internal_internships))
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():

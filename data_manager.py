@@ -78,6 +78,36 @@ class DataManager:
                         )
                     )
                 conn.commit()
+            else:
+                # Add any new internships that don't exist yet
+                existing_ids = set()
+                cursor.execute("SELECT id FROM internships")
+                for row in cursor.fetchall():
+                    if hasattr(row, 'keys'):
+                        existing_ids.add(row['id'])
+                    else:
+                        existing_ids.add(row[0])
+                for internship in self._get_sample_internships():
+                    if internship['id'] not in existing_ids:
+                        cursor.execute(
+                            f"""INSERT INTO internships
+                               (id, title, organization, sector, location, duration,
+                                stipend, required_skills, education_requirement,
+                                description, capacity, affirmative_action_required, apply_url)
+                               VALUES ({p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p})""",
+                            (
+                                internship['id'], internship['title'],
+                                internship['organization'], internship['sector'],
+                                internship['location'], internship['duration'],
+                                internship['stipend'],
+                                json.dumps(internship['required_skills']),
+                                internship['education_requirement'],
+                                internship['description'], internship['capacity'],
+                                1 if internship['affirmative_action_required'] else 0,
+                                internship.get('apply_url', ''),
+                            )
+                        )
+                conn.commit()
         finally:
             conn.close()
 
@@ -663,5 +693,171 @@ class DataManager:
                 'description': 'Analyze power grid performance and optimization strategies.',
                 'capacity': 25, 'affirmative_action_required': False,
                 'apply_url': 'https://powergrid.in/internships'
+            },
+            # Private Sector & MNCs
+            {
+                'id': 'INT031', 'title': 'Software Engineering Intern',
+                'organization': 'Tata Consultancy Services',
+                'sector': 'Technology', 'location': 'Mumbai',
+                'duration': '6 months', 'stipend': 25000,
+                'required_skills': ['Java', 'Python', 'Web Development', 'SQL'],
+                'education_requirement': 'undergraduate',
+                'description': 'Work on enterprise software solutions and gain hands-on experience with modern tech stack.',
+                'capacity': 100, 'affirmative_action_required': True,
+                'apply_url': 'https://careers.tcs.com/internships'
+            },
+            {
+                'id': 'INT032', 'title': 'Data Science Intern',
+                'organization': 'Infosys',
+                'sector': 'Technology', 'location': 'Bangalore',
+                'duration': '6 months', 'stipend': 22000,
+                'required_skills': ['Python', 'Machine Learning', 'Data Analysis', 'Statistics'],
+                'education_requirement': 'undergraduate',
+                'description': 'Assist in building AI/ML models for enterprise analytics solutions.',
+                'capacity': 50, 'affirmative_action_required': True,
+                'apply_url': 'https://www.infosys.com/careers/internships'
+            },
+            {
+                'id': 'INT033', 'title': 'Cloud Computing Intern',
+                'organization': 'Wipro',
+                'sector': 'Technology', 'location': 'Hyderabad',
+                'duration': '6 months', 'stipend': 20000,
+                'required_skills': ['Cloud Computing', 'AWS', 'DevOps', 'Linux'],
+                'education_requirement': 'undergraduate',
+                'description': 'Learn cloud infrastructure management and deployment automation.',
+                'capacity': 40, 'affirmative_action_required': True,
+                'apply_url': 'https://www.wipro.com/careers/internships'
+            },
+            {
+                'id': 'INT034', 'title': 'UI/UX Design Intern',
+                'organization': 'Flipkart',
+                'sector': 'Technology', 'location': 'Bangalore',
+                'duration': '4 months', 'stipend': 30000,
+                'required_skills': ['UI/UX Design', 'Figma', 'User Research', 'Prototyping'],
+                'education_requirement': 'undergraduate',
+                'description': 'Design user interfaces for India\'s leading e-commerce platform.',
+                'capacity': 20, 'affirmative_action_required': False,
+                'apply_url': 'https://www.flipkart.com/careers/internships'
+            },
+            {
+                'id': 'INT035', 'title': 'Product Management Intern',
+                'organization': 'Razorpay',
+                'sector': 'Fintech', 'location': 'Bangalore',
+                'duration': '6 months', 'stipend': 35000,
+                'required_skills': ['Product Management', 'Analytics', 'SQL', 'Communication'],
+                'education_requirement': 'undergraduate',
+                'description': 'Work on payment products used by millions of Indian businesses.',
+                'capacity': 15, 'affirmative_action_required': False,
+                'apply_url': 'https://razorpay.com/careers/internships'
+            },
+            {
+                'id': 'INT036', 'title': 'Cybersecurity Intern',
+                'organization': 'TCS Cyber Defense',
+                'sector': 'Cybersecurity', 'location': 'Pune',
+                'duration': '6 months', 'stipend': 22000,
+                'required_skills': ['Cybersecurity', 'Network Security', 'Python', 'Ethical Hacking'],
+                'education_requirement': 'undergraduate',
+                'description': 'Assist in security audits and vulnerability assessments for enterprise clients.',
+                'capacity': 30, 'affirmative_action_required': True,
+                'apply_url': 'https://careers.tcs.com/cybersecurity-internships'
+            },
+            {
+                'id': 'INT037', 'title': 'Full Stack Development Intern',
+                'organization': 'Zoho',
+                'sector': 'Technology', 'location': 'Chennai',
+                'duration': '6 months', 'stipend': 25000,
+                'required_skills': ['JavaScript', 'React', 'Node.js', 'Database Management'],
+                'education_requirement': 'undergraduate',
+                'description': 'Build full-stack web applications for Zoho\'s suite of business tools.',
+                'capacity': 40, 'affirmative_action_required': True,
+                'apply_url': 'https://www.zoho.com/careers/internships'
+            },
+            {
+                'id': 'INT038', 'title': 'AI/ML Research Intern',
+                'organization': 'Google India',
+                'sector': 'Technology', 'location': 'Hyderabad',
+                'duration': '6 months', 'stipend': 50000,
+                'required_skills': ['Machine Learning', 'Python', 'TensorFlow', 'Research'],
+                'education_requirement': 'undergraduate',
+                'description': 'Research and develop AI models for Google products used in India.',
+                'capacity': 10, 'affirmative_action_required': False,
+                'apply_url': 'https://buildyourfuture.withgoogle.com/internships'
+            },
+            {
+                'id': 'INT039', 'title': 'Backend Engineering Intern',
+                'organization': 'Swiggy',
+                'sector': 'Technology', 'location': 'Bangalore',
+                'duration': '6 months', 'stipend': 40000,
+                'required_skills': ['Python', 'Go', 'Microservices', 'System Design'],
+                'education_requirement': 'undergraduate',
+                'description': 'Build scalable backend systems powering food delivery for millions.',
+                'capacity': 20, 'affirmative_action_required': False,
+                'apply_url': 'https://careers.swiggy.com/internships'
+            },
+            {
+                'id': 'INT040', 'title': 'Digital Marketing Intern',
+                'organization': 'Hindustan Unilever',
+                'sector': 'FMCG', 'location': 'Mumbai',
+                'duration': '6 months', 'stipend': 20000,
+                'required_skills': ['Digital Marketing', 'Social Media', 'Content Writing', 'Analytics'],
+                'education_requirement': 'undergraduate',
+                'description': 'Support digital marketing campaigns for India\'s largest FMCG company.',
+                'capacity': 30, 'affirmative_action_required': True,
+                'apply_url': 'https://www.hul.co.in/careers/internships'
+            },
+            {
+                'id': 'INT041', 'title': 'Business Analyst Intern',
+                'organization': 'McKinsey India',
+                'sector': 'Consulting', 'location': 'New Delhi',
+                'duration': '6 months', 'stipend': 45000,
+                'required_skills': ['Business Analysis', 'Excel', 'PowerPoint', 'Research'],
+                'education_requirement': 'undergraduate',
+                'description': 'Support consulting engagements across industries in India.',
+                'capacity': 15, 'affirmative_action_required': False,
+                'apply_url': 'https://www.mckinsey.com/careers/internships'
+            },
+            {
+                'id': 'INT042', 'title': 'Blockchain Development Intern',
+                'organization': 'Polygon Labs',
+                'sector': 'Technology', 'location': 'Bangalore',
+                'duration': '4 months', 'stipend': 35000,
+                'required_skills': ['Blockchain', 'Solidity', 'Web3', 'JavaScript'],
+                'education_requirement': 'undergraduate',
+                'description': 'Develop smart contracts and dApps on Polygon blockchain.',
+                'capacity': 10, 'affirmative_action_required': False,
+                'apply_url': 'https://polygon.technology/careers'
+            },
+            {
+                'id': 'INT043', 'title': 'Content Writing Intern',
+                'organization': 'Media.net',
+                'sector': 'Media', 'location': 'Mumbai',
+                'duration': '3 months', 'stipend': 15000,
+                'required_skills': ['Content Writing', 'SEO', 'Research', 'Communication'],
+                'education_requirement': 'undergraduate',
+                'description': 'Create high-quality content for digital advertising platforms.',
+                'capacity': 25, 'affirmative_action_required': True,
+                'apply_url': 'https://www.media.net/careers'
+            },
+            {
+                'id': 'INT044', 'title': 'Mobile App Development Intern',
+                'organization': 'Paytm',
+                'sector': 'Fintech', 'location': 'Noida',
+                'duration': '6 months', 'stipend': 30000,
+                'required_skills': ['Android Development', 'Kotlin', 'Java', 'UI/UX'],
+                'education_requirement': 'undergraduate',
+                'description': 'Build mobile features for India\'s leading digital payments platform.',
+                'capacity': 25, 'affirmative_action_required': True,
+                'apply_url': 'https://paytm.com/careers/internships'
+            },
+            {
+                'id': 'INT045', 'title': 'Quality Assurance Intern',
+                'organization': 'SAP Labs India',
+                'sector': 'Technology', 'location': 'Bangalore',
+                'duration': '6 months', 'stipend': 28000,
+                'required_skills': ['Software Testing', 'Automation', 'Python', 'SQL'],
+                'education_requirement': 'undergraduate',
+                'description': 'Test enterprise software solutions and build automation frameworks.',
+                'capacity': 30, 'affirmative_action_required': True,
+                'apply_url': 'https://www.sap.com/india/careers/internships.html'
             },
         ]
