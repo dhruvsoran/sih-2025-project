@@ -29,8 +29,9 @@ def fetch_count(cursor):
     row = cursor.fetchone()
     if row is None:
         return 0
-    if isinstance(row, dict):
-        return row.get('count', row.get('COUNT', 0))
+    if hasattr(row, 'keys'):
+        for key in row.keys():
+            return row[key]
     return row[0]
 
 def init_db():
