@@ -1,13 +1,18 @@
 import os
 import logging
 import secrets
-import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 logger = logging.getLogger(__name__)
 
-# Resend API configuration
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
-MAIL_FROM = os.environ.get('MAIL_FROM', 'Prayaas <onboarding@resend.dev>')
+# SMTP configuration (testmail.app by default, or configure your own)
+SMTP_HOST = os.environ.get('SMTP_HOST', 'smtp.testmail.app')
+SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
+SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'apikey')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'cd3045f4-c1e8-4ec5-aa03-e9c86ad97ff0')
+MAIL_FROM = os.environ.get('MAIL_FROM', 'Prayaas <noreply@testmail.app>')
 BASE_URL = os.environ.get('BASE_URL', 'https://sih-2025-project-2.onrender.com')
 
 
@@ -17,19 +22,8 @@ def generate_verification_token():
 
 
 def send_verification_email(to_email, student_name, token):
-    """
-    Send a verification email via Resend API.
-    Falls back to logging the URL if RESEND_API_KEY is not set.
-    """
+    """Send a verification email via SMTP."""
     verify_url = f"{BASE_URL}/verify/{token}"
-
-    if not RESEND_API_KEY:
-        logger.info("=========================================")
-        logger.info("EMAIL VERIFICATION (dev mode - no API key)")
-        logger.info(f"To: {to_email}")
-        logger.info(f"Verify URL: {verify_url}")
-        logger.info("=========================================")
-        return True
 
     html = f"""
     <!DOCTYPE html>
@@ -69,29 +63,25 @@ def send_verification_email(to_email, student_name, token):
     </html>
     """
 
-    try:
-        resp = requests.post(
-            "https://api.resend.com/emails",
-            headers={
-                "Authorization": f"Bearer {RESEND_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "from": MAIL_FROM,
-                "to": [to_email],
-                "subject": "Verify your Prayaas account",
-                "html": html,
-            },
-            timeout=15,
-        )
+    text = f"Hi {student_name},\n\nVerify your email: {verify_url}\n\nThis link expires in 24 hours."
 
-        if resp.status_code == 200:
-            logger.info(f"Verification email sent to {to_email}")
-            return True
-        else:
-            logger.error(f"Resend API error {resp.status_code}: {resp.text}")
-            logger.info(f"Verify URL (fallback): {verify_url}")
-            return True
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "Verify your Prayaas account"
+        msg['From'] = MAIL_FROM
+        msg['To'] = to_email
+        msg.attach(MIMEText(text, 'plain'))
+        msg.attach(MIMEText(html, 'html'))
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.sendmail(MAIL_FROM, to_email, msg.as_string())
+
+        logger.info(f"Verification email sent to {to_email}")
+        return True
 
     except Exception as e:
         logger.error(f"Failed to send email to {to_email}: {e}")
