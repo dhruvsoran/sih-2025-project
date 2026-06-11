@@ -480,24 +480,28 @@ a:hover { color:var(--white); }
 .form-text { color: var(--gray-4); font-size: .8125rem; }
 
 /* ======================== TABLES ======================== */
-.table { color:var(--gray-1); }
+.table-responsive { background: transparent !important; }
+.table { color: var(--gray-1) !important; background: transparent !important; }
 .table th {
-  background: rgba(255,255,255,.03);
-  border-color: var(--glass-border);
-  color: var(--gray-2);
+  background: rgba(255,255,255,.03) !important;
+  border-color: var(--glass-border) !important;
+  color: var(--gray-2) !important;
   font-weight: 600;
   font-size: .75rem;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 .table td {
-  border-color: rgba(255,255,255,.05);
+  border-color: rgba(255,255,255,.05) !important;
+  color: var(--gray-1) !important;
   vertical-align: middle;
   padding: .875rem 1rem;
+  background: transparent !important;
 }
 .table-hover tbody tr { transition: background var(--dur) var(--ease); }
-.table-hover tbody tr:hover { background: rgba(var(--blue-rgb),.04); }
-.table-striped tbody tr:nth-of-type(odd) { background: rgba(255,255,255,.02); }
+.table-hover tbody tr:hover { background: rgba(var(--blue-rgb),.04) !important; }
+.table-striped tbody tr:nth-of-type(odd) { background: rgba(255,255,255,.02) !important; }
+.table-sm td, .table-sm th { padding: .5rem !important; }
 
 /* ======================== BADGES ======================== */
 .badge {
@@ -955,6 +959,7 @@ footer a:hover { color: var(--white); }
 /* Fix table elements */
 .table {
   color: var(--gray-1) !important;
+  background: transparent !important;
 }
 
 .table th {
@@ -966,6 +971,7 @@ footer a:hover { color: var(--white); }
 .table td {
   border-color: rgba(255, 255, 255, .05) !important;
   color: var(--gray-1) !important;
+  background: transparent !important;
 }
 
 .table-hover tbody tr:hover {
@@ -974,6 +980,11 @@ footer a:hover { color: var(--white); }
 
 .table-striped tbody tr:nth-of-type(odd) {
   background: rgba(255, 255, 255, .02) !important;
+}
+
+.table-responsive {
+  background: transparent !important;
+  border: none !important;
 }
 
 /* Fix badges */
