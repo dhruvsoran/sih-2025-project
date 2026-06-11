@@ -7,8 +7,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import os
 import tempfile
+import logging
 from datetime import datetime
 from functools import wraps
+
+logger = logging.getLogger(__name__)
 
 data_manager = DataManager()
 matching_engine = MatchingEngine()
@@ -264,17 +267,22 @@ def admin_login():
         email = request.form.get('email')
         password = request.form.get('password')
         
+        logger.info(f"Admin login attempt: email={email}")
+        
         if not email or not password:
             flash('Email and password are required.', 'error')
         else:
             admin = data_manager.get_admin_by_email(email)
-            if admin and check_password_hash(admin['password'], password):
-                session['admin_id'] = admin['id']
-                session['is_admin'] = True
-                flash('Successfully logged in as admin!', 'success')
-                return redirect(url_for('admin_dashboard'))
-            else:
-                flash('Invalid email or password.', 'error')
+            logger.info(f"Admin found: {admin is not None}")
+            if admin:
+                pwd_ok = check_password_hash(admin['password'], password)
+                logger.info(f"Password valid: {pwd_ok}")
+                if pwd_ok:
+                    session['admin_id'] = admin['id']
+                    session['is_admin'] = True
+                    flash('Successfully logged in as admin!', 'success')
+                    return redirect(url_for('admin_dashboard'))
+            flash('Invalid email or password.', 'error')
     
     return render_template('admin_login.html')
 

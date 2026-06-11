@@ -1,5 +1,4 @@
 Flask==3.1.2
-Flask-Session==0.8.0
 gunicorn==23.0.0
 email_validator==2.3.0
 PyPDF2==3.0.1
