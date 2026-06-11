@@ -103,10 +103,11 @@ def index():
 
 @app.route('/student/login', methods=['GET', 'POST'])
 def student_login():
-    if session.get('student_id'):
-        return redirect(url_for('student_dashboard'))
-    if session.get('is_admin'):
-        return redirect(url_for('admin_dashboard'))
+    if request.method == 'GET':
+        if session.get('student_id'):
+            return redirect(url_for('student_dashboard'))
+        if session.get('is_admin'):
+            return redirect(url_for('admin_dashboard'))
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
