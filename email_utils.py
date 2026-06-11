@@ -110,11 +110,12 @@ def send_verification_email(to_email, student_name, token):
 
     # Try SMTP first
     try:
+        logger.info(f"Attempting SMTP send to {to_email} via {SMTP_HOST}:{SMTP_PORT}")
         _send_via_smtp(to_email, subject, html)
         logger.info(f"Email sent via SMTP to {to_email}")
         return True
     except Exception as e:
-        logger.warning(f"SMTP failed: {e}")
+        logger.error(f"SMTP failed for {to_email}: {type(e).__name__}: {e}")
 
     # Fallback to Resend API
     if RESEND_API_KEY:
@@ -123,7 +124,7 @@ def send_verification_email(to_email, student_name, token):
             logger.info(f"Email sent via Resend to {to_email}")
             return True
         except Exception as e:
-            logger.warning(f"Resend failed: {e}")
+            logger.error(f"Resend failed for {to_email}: {type(e).__name__}: {e}")
 
-    logger.info(f"Email verify URL: {verify_url}")
-    return True
+    logger.error(f"ALL EMAIL METHODS FAILED for {to_email}. Verify URL: {verify_url}")
+    return False
