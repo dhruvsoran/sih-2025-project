@@ -223,10 +223,12 @@ def profile_form():
             verification_token
         )
         
+        # Set session so the verify page knows who just registered
         session['student_id'] = student_id
+        session['pending_verify_email'] = student_data['email']
         
-        flash('Profile created! Please check your email to verify your account.', 'success')
-        return redirect(url_for('student_dashboard'))
+        flash('Account created! Please check your email and verify your account.', 'success')
+        return redirect(url_for('resend_verification'))
     
     return render_template('profile_form.html')
 
