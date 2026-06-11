@@ -3,7 +3,7 @@ import os
 import logging
 import uuid
 from typing import List, Dict, Any
-from db_config import get_connection, init_db
+from db_config import get_connection, init_db, placeholder, fetch_count
 from werkzeug.security import generate_password_hash
 
 logger = logging.getLogger(__name__)
@@ -28,14 +28,15 @@ class DataManager:
     def _seed_admin_if_empty(self):
         """Create default admin account if no admins exist"""
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
             cursor.execute("SELECT COUNT(*) FROM admins")
-            count = cursor.fetchone()[0]
+            count = fetch_count(cursor)
             if count == 0:
                 cursor.execute(
-                    """INSERT INTO admins (id, name, email, password, created_at)
-                       VALUES (?, ?, ?, ?, ?)""",
+                    f"""INSERT INTO admins (id, name, email, password, created_at)
+                       VALUES ({p}, {p}, {p}, {p}, {p})""",
                     (
                         str(uuid.uuid4()),
                         'Prayaas Admin',
@@ -51,18 +52,19 @@ class DataManager:
 
     def _seed_internships_if_empty(self):
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
             cursor.execute("SELECT COUNT(*) FROM internships")
-            count = cursor.fetchone()[0]
+            count = fetch_count(cursor)
             if count == 0:
                 for internship in self._get_sample_internships():
                     cursor.execute(
-                        """INSERT INTO internships
+                        f"""INSERT INTO internships
                            (id, title, organization, sector, location, duration,
                             stipend, required_skills, education_requirement,
                             description, capacity, affirmative_action_required, apply_url)
-                           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                           VALUES ({p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p})""",
                         (
                             internship['id'], internship['title'],
                             internship['organization'], internship['sector'],
@@ -98,9 +100,10 @@ class DataManager:
 
     def get_student(self, student_id: str) -> Dict[str, Any] | None:
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM students WHERE id = ?", (student_id,))
+            cursor.execute(f"SELECT * FROM students WHERE id = {p}", (student_id,))
             row = cursor.fetchone()
             if row:
                 d = dict(row)
@@ -114,9 +117,10 @@ class DataManager:
 
     def get_student_by_email(self, email: str) -> Dict[str, Any] | None:
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM students WHERE email = ?", (email,))
+            cursor.execute(f"SELECT * FROM students WHERE email = {p}", (email,))
             row = cursor.fetchone()
             if row:
                 d = dict(row)
@@ -130,14 +134,15 @@ class DataManager:
 
     def add_student(self, student_data: Dict[str, Any]):
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """INSERT INTO students
+                f"""INSERT INTO students
                    (id, name, email, phone, age, education, college, cgpa,
                     skills, interests, location_preference, location_type,
                     category, experience, past_participation, created_at, password)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                   VALUES ({p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p})""",
                 (
                     student_data['id'], student_data.get('name'),
                     student_data.get('email'), student_data.get('phone'),
@@ -191,15 +196,16 @@ class DataManager:
 
     def add_match(self, match_data: Dict[str, Any]):
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
             cursor.execute(
-                "DELETE FROM matches WHERE student_id = ?",
+                f"DELETE FROM matches WHERE student_id = {p}",
                 (match_data.get('student_id'),)
             )
             cursor.execute(
-                """INSERT INTO matches (student_id, matches, timestamp)
-                   VALUES (?, ?, ?)""",
+                f"""INSERT INTO matches (student_id, matches, timestamp)
+                   VALUES ({p}, {p}, {p})""",
                 (
                     match_data.get('student_id'),
                     json.dumps(match_data.get('matches', [])),
@@ -222,9 +228,10 @@ class DataManager:
 
     def get_admin_by_email(self, email: str) -> Dict[str, Any] | None:
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM admins WHERE email = ?", (email,))
+            cursor.execute(f"SELECT * FROM admins WHERE email = {p}", (email,))
             row = cursor.fetchone()
             return dict(row) if row else None
         finally:
@@ -232,9 +239,10 @@ class DataManager:
 
     def get_admin_by_id(self, admin_id: str) -> Dict[str, Any] | None:
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM admins WHERE id = ?", (admin_id,))
+            cursor.execute(f"SELECT * FROM admins WHERE id = {p}", (admin_id,))
             row = cursor.fetchone()
             return dict(row) if row else None
         finally:
@@ -242,11 +250,12 @@ class DataManager:
 
     def add_admin(self, admin_data: Dict[str, Any]):
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """INSERT INTO admins (id, name, email, password, created_at)
-                   VALUES (?, ?, ?, ?, ?)""",
+                f"""INSERT INTO admins (id, name, email, password, created_at)
+                   VALUES ({p}, {p}, {p}, {p}, {p})""",
                 (
                     admin_data['id'], admin_data.get('name'),
                     admin_data.get('email'), admin_data.get('password'),
@@ -259,14 +268,15 @@ class DataManager:
 
     def add_internship(self, internship_data: Dict[str, Any]):
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """INSERT INTO internships
+                f"""INSERT INTO internships
                    (id, title, organization, sector, location, duration,
                     stipend, required_skills, education_requirement,
                     description, capacity, affirmative_action_required, apply_url)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                   VALUES ({p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p})""",
                 (
                     internship_data['id'], internship_data.get('title'),
                     internship_data.get('organization'), internship_data.get('sector'),
@@ -286,14 +296,15 @@ class DataManager:
 
     def update_internship(self, internship_id: str, internship_data: Dict[str, Any]):
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """UPDATE internships
-                   SET title=?, organization=?, sector=?, location=?, duration=?,
-                       stipend=?, required_skills=?, education_requirement=?,
-                       description=?, capacity=?, affirmative_action_required=?, apply_url=?
-                   WHERE id=?""",
+                f"""UPDATE internships
+                   SET title={p}, organization={p}, sector={p}, location={p}, duration={p},
+                       stipend={p}, required_skills={p}, education_requirement={p},
+                       description={p}, capacity={p}, affirmative_action_required={p}, apply_url={p}
+                   WHERE id={p}""",
                 (
                     internship_data.get('title'), internship_data.get('organization'),
                     internship_data.get('sector'), internship_data.get('location'),
@@ -313,9 +324,10 @@ class DataManager:
 
     def delete_internship(self, internship_id: str):
         conn = get_connection()
+        p = placeholder()
         try:
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM internships WHERE id = ?", (internship_id,))
+            cursor.execute(f"DELETE FROM internships WHERE id = {p}", (internship_id,))
             conn.commit()
         finally:
             conn.close()

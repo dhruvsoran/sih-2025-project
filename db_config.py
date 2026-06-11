@@ -4,12 +4,18 @@ import sqlite3
 DATABASE_URL = os.environ.get('DATABASE_URL')
 DB_PATH = os.environ.get('SQLITE_DB_PATH', os.path.join(os.path.dirname(__file__), 'data', 'internship.db'))
 
+def is_postgres():
+    return bool(DATABASE_URL)
+
+def placeholder():
+    return '%s' if DATABASE_URL else '?'
+
 def get_connection():
     if DATABASE_URL:
         import psycopg2
         import psycopg2.extras
         conn = psycopg2.connect(DATABASE_URL)
-        conn.cursor_factory = psycopg2.extras.RealDictCursor
+        conn.autocommit = False
         return conn
     else:
         os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -18,6 +24,14 @@ def get_connection():
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA foreign_keys=ON")
         return conn
+
+def fetch_count(cursor):
+    row = cursor.fetchone()
+    if row is None:
+        return 0
+    if isinstance(row, dict):
+        return row.get('count', row.get('COUNT', 0))
+    return row[0]
 
 def init_db():
     conn = get_connection()
