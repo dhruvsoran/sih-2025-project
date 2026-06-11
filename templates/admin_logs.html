@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Activity Logs — Prayaas Admin{% endblock %}
+{% block meta_desc %}View admin activity logs for the Prayaas internship matching platform.{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card card-glow mb-4">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--violet);font-weight:600;margin-bottom:.5rem;">Admin Panel</div>
+                    <h2 style="font-size:1.5rem;margin-bottom:.25rem;">Activity Logs</h2>
+                    <p style="color:var(--gray-3);font-size:.875rem;margin:0;">Recent student registrations and matching activity</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:48px;height:48px;border-radius:14px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fas fa-user-graduate" style="color:var(--blue);"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" style="font-size:1.5rem;">{{ stats.total_students }}</div>
+                        <div class="stat-label">Students</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:48px;height:48px;border-radius:14px;background:rgba(0,255,136,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fas fa-handshake" style="color:var(--green);"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" style="font-size:1.5rem;">{{ stats.total_matches }}</div>
+                        <div class="stat-label">Matches</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,170,0,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fas fa-briefcase" style="color:var(--amber);"></i>
+                    </div>
+                    <div>
+                        <div class="stat-number" style="font-size:1.5rem;">{{ stats.total_internships }}</div>
+                        <div class="stat-label">Internships</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Timeline -->
+    <div class="card">
+        <div class="card-header" style="display:flex;align-items:center;gap:.5rem;">
+            <i class="fas fa-history" style="color:var(--blue);font-size:.875rem;"></i>
+            <span style="font-size:.9375rem;">Recent Activity</span>
+        </div>
+        <div class="card-body">
+            {% if logs %}
+            <div class="timeline">
+                {% for log in logs[:50] %}
+                <div class="d-flex gap-3 mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}" style="border-color:var(--glass-border) !important;">
+                    <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="{{ log.icon }}" style="color:{{ log.color }};font-size:.875rem;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div style="font-size:.875rem;font-weight:600;color:#fff;">{{ log.message }}</div>
+                        <div style="font-size:.75rem;color:var(--gray-4);">{{ log.detail }}</div>
+                    </div>
+                    <div style="font-size:.75rem;color:var(--gray-4);white-space:nowrap;">
+                        {{ log.timestamp.split('T')[0] if log.timestamp else '' }}
+                        {% if log.timestamp and 'T' in log.timestamp %}
+                            {{ log.timestamp.split('T')[1][:5] if log.timestamp.split('T')[1]|length > 5 else log.timestamp.split('T')[1] }}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-history" style="color:var(--gray-4);font-size:2rem;margin-bottom:1rem;display:block;"></i>
+                <p style="color:var(--gray-4);font-size:.9375rem;">No activity logged yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

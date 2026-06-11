@@ -352,6 +352,17 @@ class DataManager:
         finally:
             conn.close()
 
+    def delete_student(self, student_id: str):
+        conn = get_connection()
+        p = placeholder()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(f"DELETE FROM matches WHERE student_id = {p}", (student_id,))
+            cursor.execute(f"DELETE FROM students WHERE id = {p}", (student_id,))
+            conn.commit()
+        finally:
+            conn.close()
+
     def delete_internship(self, internship_id: str):
         conn = get_connection()
         p = placeholder()

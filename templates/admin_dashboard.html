@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}Admin Dashboard — Prayaas{% endblock %}
+{% block meta_desc %}Admin dashboard for the Prayaas internship matching platform.{% endblock %}
+
+{% block extra_head %}<meta name="robots" content="noindex, nofollow">{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -15,6 +18,9 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <div class="d-flex gap-2 justify-content-md-end flex-wrap">
+                        <a href="{{ url_for('admin_logs') }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-history me-1"></i>Logs
+                        </a>
                         <a href="{{ url_for('admin_internships') }}" class="btn btn-success btn-sm">
                             <i class="fas fa-briefcase me-1"></i>Internships
                         </a>
@@ -98,29 +104,29 @@
                     <div style="width:48px;height:48px;border-radius:14px;background:rgba(var(--blue-rgb),.1);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
                         <i class="fas fa-map-marked-alt" style="color:var(--blue);"></i>
                     </div>
-                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">28</div>
-                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">States/UTs</div>
+                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">{{ stats.total_internships }}</div>
+                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">Total Internships</div>
                 </div>
                 <div class="col-lg-3 col-6 text-center">
                     <div style="width:48px;height:48px;border-radius:14px;background:rgba(0,255,136,.08);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
                         <i class="fas fa-rupee-sign" style="color:var(--green);"></i>
                     </div>
-                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">₹2.4Cr</div>
-                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">Stipend Value</div>
+                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">{{ stats.rural_students }}</div>
+                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">Rural Students</div>
                 </div>
                 <div class="col-lg-3 col-6 text-center">
                     <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,170,0,.08);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
                         <i class="fas fa-cogs" style="color:var(--amber);"></i>
                     </div>
-                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">180+</div>
-                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">Skill Categories</div>
+                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">{{ stats.sc_st_students }}</div>
+                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">SC/ST Students</div>
                 </div>
                 <div class="col-lg-3 col-6 text-center">
                     <div style="width:48px;height:48px;border-radius:14px;background:rgba(var(--violet-rgb),.1);display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
                         <i class="fas fa-trophy" style="color:var(--violet);"></i>
                     </div>
-                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">89.2%</div>
-                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">Placement Rate</div>
+                    <div style="font-size:1.5rem;font-weight:800;color:#fff;">{{ "%.1f"|format(stats.match_rate) }}%</div>
+                    <div style="font-size:.75rem;color:var(--gray-4);text-transform:uppercase;letter-spacing:1px;">Match Rate</div>
                 </div>
             </div>
         </div>
@@ -254,9 +260,17 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ url_for('run_matching', student_id=student.id) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-magic"></i>
-                                </a>
+                                <div class="d-flex gap-1">
+                                    <a href="{{ url_for('run_matching', student_id=student.id) }}" class="btn btn-sm btn-outline-primary" title="Run matching">
+                                        <i class="fas fa-magic"></i>
+                                    </a>
+                                    <form method="POST" action="{{ url_for('admin_delete_student') }}" style="display:inline;" onsubmit="return confirm('Delete student {{ student.name }}? This cannot be undone.');">
+                                        <input type="hidden" name="student_id" value="{{ student.id }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete student">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}

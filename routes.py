@@ -23,6 +23,8 @@ def add_security_headers(response):
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'"
     return response
 
 @app.errorhandler(404)
@@ -35,13 +37,15 @@ def internal_server_error(e):
 
 @app.route('/robots.txt')
 def robots_txt():
-    response = make_response(open('static/robots.txt').read())
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    response = make_response(open(os.path.join(base_dir, 'static', 'robots.txt')).read())
     response.headers['Content-Type'] = 'text/plain'
     return response
 
 @app.route('/sitemap.xml')
 def sitemap_xml():
-    response = make_response(open('static/sitemap.xml').read())
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    response = make_response(open(os.path.join(base_dir, 'static', 'sitemap.xml')).read())
     response.headers['Content-Type'] = 'application/xml'
     return response
 
@@ -96,7 +100,7 @@ def index():
         'total_students': len(students),
         'total_internships': len(internships),
         'total_matches': len(matches),
-        'match_rate': (len(matches) / len(students) * 100) if students else 0
+        'match_rate': (len(matches) / len(students) * 100) if len(students) > 0 else 0
     }
     
     return render_template('index.html', stats=stats)
@@ -392,6 +396,64 @@ def admin_internships():
     
     internships = data_manager.get_all_internships()
     return render_template('admin_internships.html', internships=internships)
+
+@app.route('/admin/students/delete', methods=['POST'])
+@admin_required
+def admin_delete_student():
+    """Delete a student from the database."""
+    student_id = request.form.get('student_id')
+    if student_id:
+        student = data_manager.get_student(student_id)
+        if student:
+            data_manager.delete_student(student_id)
+            flash(f'Student "{student["name"]}" deleted successfully.', 'success')
+        else:
+            flash('Student not found.', 'error')
+    else:
+        flash('No student ID provided.', 'error')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/logs')
+@admin_required
+def admin_logs():
+    """View activity logs for the admin panel."""
+    students = data_manager.get_all_students()
+    matches = data_manager.get_all_matches()
+    internships = data_manager.get_all_internships()
+
+    logs = []
+    for s in students:
+        logs.append({
+            'type': 'registration',
+            'icon': 'fas fa-user-plus',
+            'color': 'var(--blue)',
+            'message': f'{s["name"]} registered',
+            'detail': s.get('email', ''),
+            'timestamp': s.get('created_at', ''),
+        })
+    for m in matches:
+        student = next((s for s in students if s['id'] == m['student_id']), None)
+        name = student['name'] if student else 'Unknown'
+        top_match = m['matches'][0]['internship']['title'] if m.get('matches') else 'No matches'
+        score = m['matches'][0]['score'] if m.get('matches') else 0
+        logs.append({
+            'type': 'match',
+            'icon': 'fas fa-handshake',
+            'color': 'var(--green)',
+            'message': f'{name} matched with {top_match}',
+            'detail': f'Score: {score}%',
+            'timestamp': m.get('timestamp', ''),
+        })
+
+    logs.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+
+    return render_template('admin_logs.html',
+                         logs=logs,
+                         stats={
+                             'total_students': len(students),
+                             'total_matches': len(matches),
+                             'total_internships': len(internships),
+                         })
 
 @app.route('/upload-resume', methods=['GET', 'POST'])
 @student_required

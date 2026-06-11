@@ -1,10 +1,25 @@
 User-agent: *
 Allow: /
+Disallow: /admin
 Disallow: /admin/
-Disallow: /admin/login
-Disallow: /admin/signup
-Disallow: /admin/internships
 Disallow: /api/
+Disallow: /health
 Disallow: /logout
+Disallow: /student
+Disallow: /match/
+Disallow: /live-match/
+Disallow: /upload-resume
 
-Sitemap: https://prayaas.gov.in/sitemap.xml
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+Sitemap: https://www.prayaas.tech/sitemap.xml

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}500 — Server Error | Prayaas{% endblock %}
+{% block meta_desc %}An internal server error occurred.{% endblock %}
+
+{% block extra_head %}<meta name="robots" content="noindex, nofollow">{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center justify-content-center" style="min-height:70vh;padding:3rem 0;">
