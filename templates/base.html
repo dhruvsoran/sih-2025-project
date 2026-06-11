@@ -56,7 +56,6 @@
       }
     }
     </script>
-    <link rel="canonical" href="https://prayaas.gov.in{{ request.path }}">
     
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,6 +73,9 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+    
     <!-- Government Header -->
     <header class="gov-header">
         <div class="container">
@@ -83,7 +85,7 @@
     </header>
 
     <!-- Floating Glass Navbar -->
-    <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+    <nav class="navbar navbar-expand-lg" aria-label="Main navigation" role="navigation">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-graduation-cap"></i>Prayaas
@@ -94,42 +96,42 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-4 me-auto">
-                    <li class="nav-item me-2">
-                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">
+                <ul class="navbar-nav ms-4 me-auto" role="menubar">
+                    <li class="nav-item me-2" role="none">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}" role="menuitem" {% if request.endpoint == 'index' %}aria-current="page"{% endif %}>
                             <i class="fas fa-home me-1"></i>Home
                         </a>
                     </li>
-                    <li class="nav-item me-2">
-                        <a class="nav-link" href="{{ url_for('index') }}#features">
+                    <li class="nav-item me-2" role="none">
+                        <a class="nav-link" href="{{ url_for('index') }}#features" role="menuitem">
                             <i class="fas fa-star me-1"></i>Features
                         </a>
                     </li>
-                    <li class="nav-item me-2">
-                        <a class="nav-link" href="{{ url_for('index') }}#platforms">
+                    <li class="nav-item me-2" role="none">
+                        <a class="nav-link" href="{{ url_for('index') }}#platforms" role="menuitem">
                             <i class="fas fa-globe me-1"></i>Platforms
                         </a>
                     </li>
-                    <li class="nav-item me-2">
-                        <a class="nav-link" href="{{ url_for('index') }}#about">
+                    <li class="nav-item me-2" role="none">
+                        <a class="nav-link" href="{{ url_for('index') }}#about" role="menuitem">
                             <i class="fas fa-info-circle me-1"></i>About
                         </a>
                     </li>
-                    <li class="nav-item me-2">
-                        <a class="nav-link" href="{{ url_for('index') }}#contact">
+                    <li class="nav-item me-2" role="none">
+                        <a class="nav-link" href="{{ url_for('index') }}#contact" role="menuitem">
                             <i class="fas fa-envelope me-1"></i>Contact
                         </a>
                     </li>
                     {% if session.student_id %}
-                    <li class="nav-item me-2">
-                        <a class="nav-link {% if request.endpoint == 'student_dashboard' %}active{% endif %}" href="{{ url_for('student_dashboard') }}">
+                    <li class="nav-item me-2" role="none">
+                        <a class="nav-link {% if request.endpoint == 'student_dashboard' %}active{% endif %}" href="{{ url_for('student_dashboard') }}" role="menuitem" {% if request.endpoint == 'student_dashboard' %}aria-current="page"{% endif %}>
                             <i class="fas fa-user-graduate me-1"></i>Dashboard
                         </a>
                     </li>
                     {% endif %}
                     {% if session.is_admin %}
-                    <li class="nav-item me-2">
-                        <a class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}">
+                    <li class="nav-item me-2" role="none">
+                        <a class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}" role="menuitem" {% if request.endpoint == 'admin_dashboard' %}aria-current="page"{% endif %}>
                             <i class="fas fa-chart-line me-1"></i>Admin Panel
                         </a>
                     </li>
@@ -175,12 +177,12 @@
     {% endwith %}
 
     <!-- Main Content -->
-    <main>
+    <main role="main" id="main-content">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="mt-5 py-5">
+    <footer class="mt-5 py-5" role="contentinfo">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4">
