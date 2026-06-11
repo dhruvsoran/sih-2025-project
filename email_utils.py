@@ -12,7 +12,7 @@ SMTP_HOST = os.environ.get('SMTP_HOST', 'smtp.testmail.app')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
 SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'apikey')
 SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'cd3045f4-c1e8-4ec5-aa03-e9c86ad97ff0')
-MAIL_FROM = os.environ.get('MAIL_FROM', 'Prayaas <noreply@testmail.app>')
+MAIL_FROM = os.environ.get('MAIL_FROM', 'Prayaas <noreply@r7jex.testmail.app>')
 BASE_URL = os.environ.get('BASE_URL', 'https://sih-2025-project-2.onrender.com')
 
 
