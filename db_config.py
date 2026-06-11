@@ -101,3 +101,42 @@ def init_db():
     conn.commit()
     cursor.close()
     conn.close()
+
+    # Run migrations for existing databases
+    _migrate()
+
+
+def _migrate():
+    """Add columns to existing tables if they don't exist."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        if is_postgres():
+            # PostgreSQL: check if column exists then add
+            cursor.execute("""
+                DO $$ BEGIN
+                    ALTER TABLE students ADD COLUMN IF NOT EXISTS email_verified INTEGER DEFAULT 0;
+                EXCEPTION WHEN duplicate_column THEN NULL;
+                END $$;
+            """)
+            cursor.execute("""
+                DO $$ BEGIN
+                    ALTER TABLE students ADD COLUMN IF NOT EXISTS verification_token TEXT DEFAULT '';
+                EXCEPTION WHEN duplicate_column THEN NULL;
+                END $$;
+            """)
+        else:
+            # SQLite: check and add columns
+            cursor.execute("PRAGMA table_info(students)")
+            columns = [row[1] for row in cursor.fetchall()]
+            if 'email_verified' not in columns:
+                cursor.execute("ALTER TABLE students ADD COLUMN email_verified INTEGER DEFAULT 0")
+            if 'verification_token' not in columns:
+                cursor.execute("ALTER TABLE students ADD COLUMN verification_token TEXT DEFAULT ''")
+        conn.commit()
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(f"Migration note: {e}")
+    finally:
+        cursor.close()
+        conn.close()

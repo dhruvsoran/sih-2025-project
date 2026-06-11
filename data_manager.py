@@ -140,6 +140,7 @@ class DataManager:
                 d['skills'] = json.loads(d['skills']) if d['skills'] else []
                 d['interests'] = json.loads(d['interests']) if d['interests'] else []
                 d['past_participation'] = bool(d['past_participation'])
+                d['email_verified'] = bool(d.get('email_verified', 0))
                 return d
             return None
         finally:
@@ -157,6 +158,7 @@ class DataManager:
                 d['skills'] = json.loads(d['skills']) if d['skills'] else []
                 d['interests'] = json.loads(d['interests']) if d['interests'] else []
                 d['past_participation'] = bool(d['past_participation'])
+                d['email_verified'] = bool(d.get('email_verified', 0))
                 return d
             return None
         finally:
@@ -171,8 +173,9 @@ class DataManager:
                 f"""INSERT INTO students
                    (id, name, email, phone, age, education, college, cgpa,
                     skills, interests, location_preference, location_type,
-                    category, experience, past_participation, created_at, password)
-                   VALUES ({p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p})""",
+                    category, experience, past_participation, created_at, password,
+                    email_verified, verification_token)
+                   VALUES ({p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p},{p})""",
                 (
                     student_data['id'], student_data.get('name'),
                     student_data.get('email'), student_data.get('phone'),
@@ -187,6 +190,8 @@ class DataManager:
                     1 if student_data.get('past_participation') else 0,
                     student_data.get('created_at'),
                     student_data.get('password', ''),
+                    1 if student_data.get('email_verified') else 0,
+                    student_data.get('verification_token', ''),
                 )
             )
             conn.commit()
@@ -359,6 +364,43 @@ class DataManager:
             cursor = conn.cursor()
             cursor.execute(f"DELETE FROM matches WHERE student_id = {p}", (student_id,))
             cursor.execute(f"DELETE FROM students WHERE id = {p}", (student_id,))
+            conn.commit()
+        finally:
+            conn.close()
+
+    def verify_student_email(self, token: str) -> bool:
+        """Verify a student's email using the verification token."""
+        conn = get_connection()
+        p = placeholder()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                f"SELECT id FROM students WHERE verification_token = {p} AND verification_token != ''",
+                (token,)
+            )
+            row = cursor.fetchone()
+            if row:
+                student_id = dict(row)['id'] if hasattr(row, 'keys') else row[0]
+                cursor.execute(
+                    f"UPDATE students SET email_verified = 1, verification_token = '' WHERE id = {p}",
+                    (student_id,)
+                )
+                conn.commit()
+                return True
+            return False
+        finally:
+            conn.close()
+
+    def update_verification_token(self, student_id: str, token: str):
+        """Update the verification token for a student."""
+        conn = get_connection()
+        p = placeholder()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                f"UPDATE students SET verification_token = {p} WHERE id = {p}",
+                (token, student_id)
+            )
             conn.commit()
         finally:
             conn.close()

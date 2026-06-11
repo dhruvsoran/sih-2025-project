@@ -3,6 +3,7 @@ from app import app
 from data_manager import DataManager
 from matching_engine import MatchingEngine
 from internship_fetcher import InternshipFetcher
+from email_utils import generate_verification_token, send_verification_email, BASE_URL
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import os
@@ -128,6 +129,12 @@ def student_login():
             # Check student
             student = data_manager.get_student_by_email(email)
             if student and student.get('password') and check_password_hash(student['password'], password):
+                if not student.get('email_verified'):
+                    # Store student_id in session so resend-verification knows who they are
+                    session['pending_verify_id'] = student['id']
+                    session['pending_verify_email'] = student['email']
+                    flash('Please verify your email before logging in. Check your inbox or resend the verification email.', 'error')
+                    return redirect(url_for('resend_verification'))
                 session['student_id'] = student['id']
                 flash(f'Welcome back, {student["name"]}!', 'success')
                 return redirect(url_for('student_dashboard'))
@@ -183,6 +190,7 @@ def profile_form():
         
         # Collect form data
         password = request.form.get('password', '')
+        verification_token = generate_verification_token()
         student_data = {
             'id': student_id,
             'name': request.form.get('name'),
@@ -200,14 +208,24 @@ def profile_form():
             'experience': request.form.get('experience'),
             'past_participation': request.form.get('past_participation') == 'yes',
             'created_at': datetime.now().isoformat(),
-            'password': generate_password_hash(password) if password else ''
+            'password': generate_password_hash(password) if password else '',
+            'email_verified': False,
+            'verification_token': verification_token,
         }
         
         # Save student data
         data_manager.add_student(student_data)
+        
+        # Send verification email
+        send_verification_email(
+            student_data['email'],
+            student_data['name'],
+            verification_token
+        )
+        
         session['student_id'] = student_id
         
-        flash('Profile created successfully!', 'success')
+        flash('Profile created! Please check your email to verify your account.', 'success')
         return redirect(url_for('student_dashboard'))
     
     return render_template('profile_form.html')
@@ -555,6 +573,54 @@ def upload_resume():
     
     student = data_manager.get_student(session.get('student_id'))
     return render_template('upload_resume.html', student=student)
+
+@app.route('/verify/<token>')
+def verify_email(token):
+    """Verify a student's email address via the token sent to their inbox."""
+    if data_manager.verify_student_email(token):
+        flash('Email verified successfully! You can now log in.', 'success')
+        # Clear any pending verification session data
+        session.pop('pending_verify_id', None)
+        session.pop('pending_verify_email', None)
+        return redirect(url_for('student_login'))
+    else:
+        flash('Invalid or expired verification link. Please resend the verification email.', 'error')
+        return redirect(url_for('resend_verification'))
+
+
+@app.route('/resend-verification', methods=['GET', 'POST'])
+def resend_verification():
+    """Resend verification email or show the pending verification page."""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        if not email:
+            flash('Please enter your email address.', 'error')
+            return redirect(url_for('resend_verification'))
+
+        student = data_manager.get_student_by_email(email)
+        if not student:
+            flash('No account found with that email.', 'error')
+            return redirect(url_for('resend_verification'))
+
+        if student.get('email_verified'):
+            flash('Your email is already verified. You can log in.', 'success')
+            return redirect(url_for('student_login'))
+
+        # Generate new token and send
+        token = generate_verification_token()
+        data_manager.update_verification_token(student['id'], token)
+        send_verification_email(student['email'], student['name'], token)
+
+        session['pending_verify_id'] = student['id']
+        session['pending_verify_email'] = student['email']
+
+        flash('Verification email resent! Check your inbox.', 'success')
+        return redirect(url_for('resend_verification'))
+
+    # GET - show the pending verification page
+    pending_email = session.get('pending_verify_email', '')
+    return render_template('verify_pending.html', email=pending_email)
+
 
 @app.route('/logout')
 def logout():
