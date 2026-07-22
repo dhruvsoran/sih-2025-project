@@ -99,11 +99,7 @@ Opens at `http://localhost:5000`
 gunicorn --bind 0.0.0.0:5000 main:app
 ```
 
-## Default Credentials
 
-### Admin Account (auto-seeded)
-- **Email:** `admin@gmail.com`
-- **Password:** `199999`
 
 ### Student Account
 Register a new student profile at `/profile` or login at `/student/login`
