@@ -1,29 +1,24 @@
 import os
 import sqlite3
+import logging
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+logger = logging.getLogger(__name__)
+
 DB_PATH = os.environ.get('SQLITE_DB_PATH', os.path.join(os.path.dirname(__file__), 'data', 'internship.db'))
 
-def is_postgres():
-    return bool(DATABASE_URL)
 
 def placeholder():
-    return '%s' if DATABASE_URL else '?'
+    return '?'
+
 
 def get_connection():
-    if DATABASE_URL:
-        import psycopg2
-        import psycopg2.extras
-        conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
-        conn.autocommit = False
-        return conn
-    else:
-        os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA foreign_keys=ON")
-        return conn
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys=ON")
+    return conn
+
 
 def fetch_count(cursor):
     row = cursor.fetchone()
@@ -33,6 +28,7 @@ def fetch_count(cursor):
         for key in row.keys():
             return row[key]
     return row[0]
+
 
 def init_db():
     conn = get_connection()
@@ -56,7 +52,9 @@ def init_db():
             experience TEXT,
             past_participation INTEGER DEFAULT 0,
             created_at TEXT,
-            password TEXT DEFAULT ''
+            password TEXT DEFAULT '',
+            email_verified INTEGER DEFAULT 0,
+            verification_token TEXT DEFAULT ''
         )
     """)
 
@@ -80,7 +78,7 @@ def init_db():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS matches (
-            id SERIAL PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             student_id TEXT,
             matches TEXT,
             timestamp TEXT,
@@ -102,7 +100,6 @@ def init_db():
     cursor.close()
     conn.close()
 
-    # Run migrations for existing databases
     _migrate()
 
 
@@ -111,32 +108,15 @@ def _migrate():
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        if is_postgres():
-            # PostgreSQL: check if column exists then add
-            cursor.execute("""
-                DO $$ BEGIN
-                    ALTER TABLE students ADD COLUMN IF NOT EXISTS email_verified INTEGER DEFAULT 0;
-                EXCEPTION WHEN duplicate_column THEN NULL;
-                END $$;
-            """)
-            cursor.execute("""
-                DO $$ BEGIN
-                    ALTER TABLE students ADD COLUMN IF NOT EXISTS verification_token TEXT DEFAULT '';
-                EXCEPTION WHEN duplicate_column THEN NULL;
-                END $$;
-            """)
-        else:
-            # SQLite: check and add columns
-            cursor.execute("PRAGMA table_info(students)")
-            columns = [row[1] for row in cursor.fetchall()]
-            if 'email_verified' not in columns:
-                cursor.execute("ALTER TABLE students ADD COLUMN email_verified INTEGER DEFAULT 0")
-            if 'verification_token' not in columns:
-                cursor.execute("ALTER TABLE students ADD COLUMN verification_token TEXT DEFAULT ''")
+        cursor.execute("PRAGMA table_info(students)")
+        columns = [row[1] for row in cursor.fetchall()]
+        if 'email_verified' not in columns:
+            cursor.execute("ALTER TABLE students ADD COLUMN email_verified INTEGER DEFAULT 0")
+        if 'verification_token' not in columns:
+            cursor.execute("ALTER TABLE students ADD COLUMN verification_token TEXT DEFAULT ''")
         conn.commit()
     except Exception as e:
-        import logging
-        logging.getLogger(__name__).warning(f"Migration note: {e}")
+        logger.warning(f"Migration note: {e}")
     finally:
         cursor.close()
         conn.close()
