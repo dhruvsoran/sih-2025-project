@@ -320,7 +320,7 @@ wheels = [
 ]
 
 [[package]]
-name = "repl-nix-workspace"
+name = "pm-internship-matching-system"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

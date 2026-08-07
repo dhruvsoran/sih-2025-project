@@ -1,7 +1,7 @@
 [project]
-name = "repl-nix-workspace"
+name = "pm-internship-matching-system"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI-powered PM Internship Scheme matching platform"
 requires-python = ">=3.11"
 dependencies = [
     "beautifulsoup4>=4.12.3",
