@@ -1,3 +1,7 @@
+# Robots.txt for Prayaas - AI-Powered Internship Matching System
+# https://sih-2025-project-2.onrender.com
+
+# Allow all crawlers
 User-agent: *
 Allow: /
 Disallow: /admin
@@ -10,6 +14,7 @@ Disallow: /match/
 Disallow: /live-match/
 Disallow: /upload-resume
 
+# Block AI crawlers from training data
 User-agent: GPTBot
 Disallow: /
 
@@ -22,4 +27,11 @@ Disallow: /
 User-agent: Google-Extended
 Disallow: /
 
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Sitemap location
 Sitemap: https://sih-2025-project-2.onrender.com/sitemap.xml

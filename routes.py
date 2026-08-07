@@ -45,8 +45,28 @@ def robots_txt():
 
 @app.route('/sitemap.xml')
 def sitemap_xml():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    response = make_response(open(os.path.join(base_dir, 'static', 'sitemap.xml')).read())
+    base_url = os.environ.get('BASE_URL', 'https://sih-2025-project-2.onrender.com')
+    today = datetime.now().strftime('%Y-%m-%d')
+    
+    pages = [
+        {'loc': '/', 'lastmod': today, 'changefreq': 'weekly', 'priority': '1.0'},
+        {'loc': '/profile', 'lastmod': today, 'changefreq': 'monthly', 'priority': '0.8'},
+        {'loc': '/student/login', 'lastmod': today, 'changefreq': 'monthly', 'priority': '0.7'},
+        {'loc': '/admin/login', 'lastmod': today, 'changefreq': 'monthly', 'priority': '0.5'},
+    ]
+    
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for page in pages:
+        xml += '  <url>\n'
+        xml += f'    <loc>{base_url}{page["loc"]}</loc>\n'
+        xml += f'    <lastmod>{page["lastmod"]}</lastmod>\n'
+        xml += f'    <changefreq>{page["changefreq"]}</changefreq>\n'
+        xml += f'    <priority>{page["priority"]}</priority>\n'
+        xml += '  </url>\n'
+    xml += '</urlset>'
+    
+    response = make_response(xml)
     response.headers['Content-Type'] = 'application/xml'
     return response
 
